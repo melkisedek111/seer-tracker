@@ -11,6 +11,8 @@ import {
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { ArrowLeftFromLine, ChevronLeft } from 'lucide-react';
+import { useUserSession } from '@/context/session.context';
+import { ROLES_OBJ } from '@/constants/index.types';
 
 type TWrapperProps = {
     title: string;
@@ -20,17 +22,22 @@ type TWrapperProps = {
 
 const Wrapper = ({ title, children, extraElement }: TWrapperProps) => {
     const pathname = usePathname();
+    const { user } = useUserSession();
     const router = useRouter();
     const paths = pathname.split("/");
-    const [_, dashboard, secondPath, thirdPath] = paths;
+    const isAdmin = [ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN].includes(user?.role || "");
+    const [_, dashboard, second, third] = paths;
 
+    const dashboardPath = isAdmin ? "admin" : "";
+    const secondPath = isAdmin ? second : dashboard;
+    const thirdPath = isAdmin ? third : second;
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-2 lg:p-6 !pb-10">
             <Breadcrumb className="hidden md:flex">
                 <BreadcrumbList>
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild>
-                            <Link href={`/${dashboard}`}>Dashboard</Link>
+                            <Link href={`/${dashboardPath}`}>Dashboard</Link>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                     {
@@ -38,7 +45,7 @@ const Wrapper = ({ title, children, extraElement }: TWrapperProps) => {
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
-                                    <Link href={`/${dashboard}/${secondPath}`} className="capitalize">{secondPath.split("-").join(" ")}</Link>
+                                    <Link href={`${dashboardPath ? "/" : ""}/${secondPath || ""}`} className="capitalize">{(secondPath)?.split("-").join(" ")}</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                         </>
@@ -48,7 +55,7 @@ const Wrapper = ({ title, children, extraElement }: TWrapperProps) => {
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
-                                    <Link href={`/${dashboard}/${secondPath}/${thirdPath}`} className="capitalize">{thirdPath.split("-").join(" ")}</Link>
+                                    <Link href={`${dashboardPath ? "/" : ""}/${secondPath}/${thirdPath || ""}`} className="capitalize">{(thirdPath)?.split("-").join(" ")}</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                         </>

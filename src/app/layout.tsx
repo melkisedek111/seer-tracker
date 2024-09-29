@@ -9,6 +9,7 @@ import { NotificationProvider } from "@/context/notification.context";
 import { Toaster } from "@/components/ui/sonner";
 import NotificationWrapper from "@/components/shared/NotificationContainer";
 import dbConnect from "@/lib/mongodb";
+import { UserSessionProvider } from "@/context/session.context";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -37,14 +38,16 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NotificationProvider>
-            <NotificationWrapper>
-              <PageContainer>
-                {children}
-              </PageContainer>
-            </NotificationWrapper>
-            <Toaster richColors position="bottom-right" expand={true} />
-          </NotificationProvider>
+          <UserSessionProvider>
+            <NotificationProvider>
+              <NotificationWrapper>
+                <PageContainer>
+                  {children}
+                </PageContainer>
+              </NotificationWrapper>
+              <Toaster richColors position="bottom-right" expand={true} />
+            </NotificationProvider>
+          </UserSessionProvider>
         </ThemeProvider>
       </body>
     </html>

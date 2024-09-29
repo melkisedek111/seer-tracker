@@ -1,7 +1,7 @@
 "use client"
 import { Bell, CircleUser, Cog, FileText, Home, LineChart, ListCheck, Menu, Package, Package2, Search, ShoppingCart, User, Users } from 'lucide-react';
 import Link from 'next/link';
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -9,6 +9,7 @@ import TopBar from './Topbar';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useUserSession } from '@/context/session.context';
 
 type TSidebarProps = {
     children: ReactNode;
@@ -16,34 +17,53 @@ type TSidebarProps = {
 
 const Sidebar = ({ children }: TSidebarProps) => {
     const pathname = usePathname();
+    const user = useUserSession();
+    let links: any[] = [];
 
-    const ADMIN_LINKS = [
-        {
-            link: "/admin",
-            title: "Dashboard",
-            Icon: Home
-        },
-        {
-            link: "/admin/users",
-            title: "Users",
-            Icon: User
-        },
-        {
-            link: "/admin/requests",
-            title: "Requests",
-            Icon: ListCheck
-        },
-        {
-            link: "/admin/settings",
-            title: "Settings",
-            Icon: Cog
-        },
-        {
-            link: "/admin/designations",
-            title: "Designations",
-            Icon: FileText
-        },
-    ]
+    if (user?.role) {
+        links = [
+            {
+                link: "/",
+                title: "Dashboard",
+                Icon: Home
+            },
+            {
+                link: "/requests",
+                title: "Requests",
+                Icon: ListCheck
+            },
+        ];
+    }
+
+
+
+    // const ADMIN_LINKS = [
+    //     {
+    //         link: "/admin",
+    //         title: "Dashboard",
+    //         Icon: Home
+    //     },
+    //     {
+    //         link: "/admin/users",
+    //         title: "Users",
+    //         Icon: User
+    //     },
+    //     {
+    //         link: "/admin/requests",
+    //         title: "Requests",
+    //         Icon: ListCheck
+    //     },
+    //     {
+    //         link: "/admin/settings",
+    //         title: "Settings",
+    //         Icon: Cog
+    //     },
+    //     {
+    //         link: "/admin/designations",
+    //         title: "Designations",
+    //         Icon: FileText
+    //     },
+    // ]
 
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -55,13 +75,16 @@ const Sidebar = ({ children }: TSidebarProps) => {
                         </Link>
                     </div>
                     <div className="flex-1">
-                        <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+                        <nav className="grid items-start px-2 text-base font-medium lg:px-4">
                             {
-                                ADMIN_LINKS.map(link => (
+                                links.map(link => (
                                     <Link
                                         href={link.link}
                                         className={
-                                            cn("flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary", pathname.startsWith(link.link) && "text-primary")
+                                            cn("flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary", 
+                                                pathname === "/" && link.link === "/" && "text-primary",
+                                                link.link !== "/" && pathname !== "/" && pathname.startsWith(link.link) && "text-primary"
+                                            )
                                         }
                                     >
                                         <link.Icon className="h-4 w-4" />

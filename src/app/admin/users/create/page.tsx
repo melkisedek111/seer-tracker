@@ -1,15 +1,15 @@
 import Wrapper from '@/components/shared/Wrapper'
 import React from 'react'
 import CreateUserPageContainer from './components/CreateUserPageContainer'
-import AuthContainer from '@/components/shared/AuthContainer'
+import AuthContainer from '@/components/shared/AuthWrapper'
 
 const CreateUserPage = () => {
     return (
-        <AuthContainer>
+        // <AuthContainer>
             <Wrapper title={"Create User"}>
                 <CreateUserPageContainer />
             </Wrapper>
-        </AuthContainer>
+        // </AuthContainer>
     )
 }
 

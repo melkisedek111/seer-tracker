@@ -69,7 +69,11 @@ export const CreateUserSchema = z.object({
 		})
 		.min(1, {
 			message: "Contact is required.",
-		}),
+		})
+		.regex(
+			/^\+63\d{8,10}$/,
+			"Phone number must follow the format +65xxxxxxxxxx"
+		),
 	email: z
 		.string({
 			required_error: "Email is required.",
@@ -136,5 +140,59 @@ export const CreateUserSchema = z.object({
 		})
 		.min(1, {
 			message: "Confirm Password is required.",
+		}),
+});
+
+export const SetUserStatusSchema = z.object({
+	userId: z
+		.string({
+			required_error: "User id is required",
+		})
+		.min(1, {
+			message: "User id is required.",
+		}),
+});
+
+export const UpdateRoleSchema = z.object({
+	userId: z
+		.string({
+			required_error: "User id is required",
+		})
+		.min(1, {
+			message: "User id is required.",
+		}),
+	roles: z
+		.array(
+			z.string({
+				required_error: "Roles is required.",
+			})
+		)
+		.refine((value) => value.some((item) => item), {
+			message: "Please select a role.",
+		}),
+});
+
+export const ApprovedUserSchema = z.object({
+	userId: z
+		.string({
+			required_error: "User id is required",
+		})
+		.min(1, {
+			message: "User id is required.",
+		}),
+});
+
+export const RegisterUserWithNoRoleSchema = CreateUserSchema.omit({
+	roles: true,
+});
+
+
+export const GetUserDetailsSchema = z.object({
+	userId: z
+		.string({
+			required_error: "User id is required",
+		})
+		.min(1, {
+			message: "User id is required.",
 		}),
 });

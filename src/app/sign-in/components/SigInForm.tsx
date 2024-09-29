@@ -2,27 +2,38 @@
 import { signInAction } from '@/app/actions/auth.actions';
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { ROLES_OBJ } from '@/constants/index.types';
 import { useNotify } from '@/context/notification.context';
+import { useUserSession } from '@/context/session.context';
 import { SignInFormSchema } from '@/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const SigInForm = () => {
     const { notify } = useNotify();
+    const { handleUserSession } = useUserSession();
+    const router = useRouter();
     const signInForm = useForm<z.infer<typeof SignInFormSchema>>({
         resolver: zodResolver(SignInFormSchema)
     });
 
     async function onSubmit(data: z.infer<typeof SignInFormSchema>) {
-        const result = await signInAction(data);
-        notify(result);
+        const response = await signInAction(data);
+        notify(response);
+
+        if (response?.ok && (response?.data?.user && response?.data?.session)) {
+            handleUserSession(response?.data);
+            console.log([ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN].some(role => response?.data?.user?.role.includes(role)))
+            if ([ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN].some(role => response?.data?.user?.role.includes(role))) {
+                router.push("/admin")
+            }
+        }
     }
 
     return (
@@ -78,8 +89,8 @@ const SigInForm = () => {
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Don&apos;t have an account?{" "}
-                            <Link href="#" className="underline">
-                                Sign up
+                            <Link href="/register" className="underline">
+                                Register
                             </Link>
                         </div>
                     </form>

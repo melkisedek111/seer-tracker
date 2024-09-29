@@ -3,8 +3,9 @@ import { OverwriteSchema } from "@/lib/mongodb";
 import mongoose, { Document } from "mongoose";
 import { ServiceCategoryType } from "./service-category.model";
 import { UserType } from "./user.model";
+import { DepartmentType } from "./department.model";
 
-export type DepartmentType = Document & {
+export type RequestType = Document & {
 	_id: string;
 	title: string;
 	serviceCategory: mongoose.Types.ObjectId | ServiceCategoryType;
@@ -23,7 +24,7 @@ export type DepartmentType = Document & {
 	createdAt: Date;
 };
 
-const DepartmentSchema = new mongoose.Schema<DepartmentType>(
+const RequestSchema = new mongoose.Schema<RequestType>(
 	{
 		title: {
 			type: String,
@@ -90,10 +91,10 @@ const DepartmentSchema = new mongoose.Schema<DepartmentType>(
 	{ timestamps: true }
 );
 
-OverwriteSchema(MODEL_NAMES.DEPARTMENT);
+OverwriteSchema(MODEL_NAMES.REQUEST);
 
 const Department =
-	mongoose.models.Department ||
-	mongoose.model<DepartmentType>(MODEL_NAMES.DEPARTMENT, DepartmentSchema);
+	mongoose.models.Request ||
+	mongoose.model<RequestType>(MODEL_NAMES.REQUEST, RequestSchema);
 
 export default Department;

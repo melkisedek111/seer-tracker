@@ -3,15 +3,17 @@ import {
 	createUser,
 	getAllUsers,
 	getUserByParams,
+	updateUserByUserId,
 } from "@/data-access/user.data-access";
 import { deleteFile, SingleFileUpload } from "@/lib/file.helper";
 import { CustomThrowError } from "@/lib/server-action.helper";
-import { TCreateUserParams, TGetAllUsersParams } from "@/types/user.types";
+import { TApprovedUserParams, TCreateUserParams, TGetAllUsersParams, TGetUserDetailParams, TRegisterUserParams, TSetUserStatusParams, TUpdateUserRoleParams } from "@/types/user.types";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { UserType } from "@/models/user.model";
+import { ROLES, ROLES_OBJ } from "@/constants/index.types";
 
-export const createUserUseCase = async (params: TCreateUserParams) => {
+export const createUserUseCase = async (params: TCreateUserParams & TRegisterUserParams) => {
 	const errors: Record<string, string> = {};
 	let avatarName: string | null = null;
 
@@ -59,11 +61,12 @@ export const createUserUseCase = async (params: TCreateUserParams) => {
 			department: new mongoose.Types.ObjectId(params.department),
 			employeeNumber: params.employeeNumber,
 			avatar: avatarName,
-			role: params.roles,
+			role: params.roles || null,
 			username: params.username,
 			password: hashedPassword,
-			approvedAt: null,
-			isRegisteredByAdmin: true,
+			approvedAt: params.roles?.includes(ROLES_OBJ.SUPER_ADMIN) ? new Date() : null,
+			isApproved: params.roles ? true : false,
+			isRegisteredByAdmin: params.isRegisteredByAdmin,
 		} as UserType;
 
 		const user = await createUser(data);
@@ -104,3 +107,63 @@ export const getAllUsersUseCase = async (params: TGetAllUsersParams) => {
 
 	return await getAllUsers(query, { page, limit });
 };
+
+
+export const setUserStatusUseCase = async (params: TSetUserStatusParams) => {
+	const user = await getUserByParams({
+		_id: params.userId
+	})
+	
+	if(!user) throw new CustomThrowError(MESSAGES.USER_NOT_EXISTS);
+
+	const status = await updateUserByUserId({
+		_id: user._id,
+		isActive: !user.isActive
+	})
+
+	return status;
+}
+
+export const approvedUserUseCase = async (params: TApprovedUserParams) => {
+	const user = await getUserByParams({
+		_id: params.userId
+	})
+	
+	if(!user) throw new CustomThrowError(MESSAGES.USER_NOT_EXISTS);
+
+	const approvedUser = await updateUserByUserId({
+		_id: user._id,
+		isApproved: true
+	})
+
+	return approvedUser;
+}
+
+export const updateUserRoleUseCase = async (params: TUpdateUserRoleParams) => {
+	const user = await getUserByParams({
+		_id: params.userId
+	})
+	
+	if(!user) throw new CustomThrowError(MESSAGES.USER_NOT_EXISTS);
+	
+	const updatedRoles = await updateUserByUserId({
+		_id: user._id,
+		role: params.roles
+	})
+	
+	if(!updatedRoles.modifiedCount) throw new CustomThrowError(MESSAGES.USER_UPDATED_ROLES_FAILED);
+
+	return { isRoleUpdated: true };
+}
+
+export const getUserDetailsUseCase = async (params: TGetUserDetailParams) => {
+	const user = await getUserByParams({
+		_id: params.userId
+	})
+	
+	if(!user) throw new CustomThrowError(MESSAGES.USER_NOT_EXISTS);
+
+	const { password } = user;
+	user.password = "";
+	return user;
+}

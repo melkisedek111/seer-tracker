@@ -19,6 +19,8 @@ export const lucia = new Lucia(adapter, {
 			role: attributes.role,
 			avatar: attributes.avatar,
 			email: attributes.email,
+			isActive: attributes.isActive,
+			isApproved: attributes.isApproved
 		};
 	},
 });
@@ -70,4 +72,6 @@ interface DatabaseUserAttributes {
     fullName: string;
 	avatar: string | null;
     role: string;
+	isActive: boolean;
+	isApproved: boolean;
 }

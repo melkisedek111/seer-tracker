@@ -26,7 +26,7 @@ export async function SingleFileUpload(
 	const arrayBuffer = await file.arrayBuffer();
 	await fs.writeFile(filePath, Buffer.from(arrayBuffer));
 
-	return filename;
+	return `${filename}.${type}`;
 }
 
 export function getFileType(type: string) {

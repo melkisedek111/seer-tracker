@@ -6,7 +6,8 @@ import { usePathname } from 'next/navigation';
 const PageContainer = ({ children }: { children: ReactNode }) => {
     const pathname = usePathname();
     const NO_SIDEBAR = [
-        "/sign-in"
+        "/sign-in",
+        "/register"
     ]
 
     if (!NO_SIDEBAR.includes(pathname)) {

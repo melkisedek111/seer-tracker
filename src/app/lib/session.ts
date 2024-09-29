@@ -1,8 +1,15 @@
+"use server";
 import { cookies } from "next/headers";
 import { cache } from "react";
-import { lucia } from "./lucia/auth";
+import { lucia } from "../../lib/lucia/auth";
 import { Session, User } from "lucia";
 import { redirect } from "next/navigation";
+import { Response } from "@/lib/server-action.helper";
+
+type TUserSession = {
+	user: User | null;
+	session: Session | null;
+}
 
 export const parsedObject = (data: any) => JSON.parse(JSON.stringify(data));
 
@@ -31,16 +38,16 @@ export const getUserSession = cache(async () => {
 		return parsedObject({ user, session });
 	} catch (error: any) {
 		console.log("User Session is not set!");
-		return { user: null, session: null };
+		return { user: null, session: null }
 	}
 });
 
 export async function checkUserSession() {
-	const { user, session } = await getUserSession();
+	// const { data } = await getUserSession();
+	// data.
+	// // if (!data?.data?.user || !session) {
+	// // 	redirect("/store");
+	// // }
 
-	if (!user || !session) {
-		redirect("/store");
-	}
-
-	return;
+	// return;
 }

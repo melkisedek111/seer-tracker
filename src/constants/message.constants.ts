@@ -7,5 +7,11 @@ export const MESSAGES = {
     SERVICE_CATEGORY_INITIALS_EXISTS: "Service category initials already exists.",
     SERVICE_CATEGORY_NAME_EXISTS: "Service category name already exists",
     SERVICE_CATEGORY_CREATE_FAILED: "Failed to create service category. Please refresh your page.",
-    SERVICE_CATEGORY_CREATE_SUCCESS: "Service category successfully created."
+    SERVICE_CATEGORY_CREATE_SUCCESS: "Service category successfully created.",
+    USER_STATUS_UPDATED: "User status has been updated.",
+    USER_NOT_EXISTS: "User does not exists.",
+    ACCOUNT_REGISTER_SUCCESS: "You have successfully created your account.",
+    USER_APPROVED_SUCCESS: "User has been successfully approved.",
+    USER_UPDATED_ROLES_SUCCESS: "User role has been updated.",
+    USER_UPDATED_ROLES_FAILED: "User role has failed to updated."
 }

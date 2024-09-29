@@ -21,9 +21,10 @@ export type UserType = Document & {
 	department: DepartmentType | mongoose.Types.ObjectId; // Add DepartmentType if populated
 	employeeNumber: string;
 	avatar: string | null;
-	role: string[];
+	role: string[] | null;
 	username: string;
 	password: string;
+	isApproved: boolean | null;
 	approvedAt: Date | null;
 	isRegisteredByAdmin: boolean;
 	isDeleted: boolean;
@@ -89,7 +90,7 @@ const UserSchema = new mongoose.Schema<UserType>(
 		role: {
 			type: [String],
 			enum: ROLES,
-			required: true,
+			default: null
 		},
 		username: {
 			type: String,
@@ -103,6 +104,10 @@ const UserSchema = new mongoose.Schema<UserType>(
 		approvedAt: {
 			type: Date,
 			default: null,
+		},
+		isApproved: {
+			type: Boolean,
+			default: false,
 		},
 		isRegisteredByAdmin: {
 			type: Boolean,
@@ -150,8 +155,8 @@ const User = mongoose.model<UserType, mongoose.PaginateModel<UserType>>(
 );
 
 export const adapter = new MongodbAdapter(
-	mongoose.connection.collection("session"),
-	mongoose.connection.collection("user")
+	mongoose.connection.collection("sessions"),
+	mongoose.connection.collection("users")
 );
 
 export default User;

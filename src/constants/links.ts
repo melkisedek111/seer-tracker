@@ -12,5 +12,8 @@ export const APP_LINKS = {
             DEPARTMENTS: "/admin/settings/departments",
             SERVICE_CATEGORIES: "/admin/settings/service-categories",
         }
+    },
+    NORMAL: {
+        CREATE_REQUEST: "/requests/create"
     }
 }

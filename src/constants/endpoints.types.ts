@@ -9,4 +9,5 @@ export const ENDPOINTS = {
     GET_ALL_USERS: "/admin/users",
     GET_POSITIONS_AND_DEPARTMENTS: "/users/filter/positions-and-departments",
     GET_SERVICE_CATEGORIES: "/admin/settings/service-categories",
+    GET_USER_SESSION: "/user/session"
 }

@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import {
     Select,
     SelectContent,
@@ -19,9 +19,11 @@ import { ENDPOINTS } from '@/constants/endpoints.types';
 import useCustomSWR from '@/hooks/useCustomSWR';
 import { getFilterPositionsAndDepartmentsAction } from '@/app/actions/general.actions';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import useQueryParams from '@/hooks/useQueryParams';
 
 const UserFilter = () => {
     const pathname = usePathname();
+    const query = useQueryParams();
     const router = useRouter();
     const [keywords, setKeywords] = useState<string>("");
     const [department, setDepartment] = useState<string>("");
@@ -49,11 +51,26 @@ const UserFilter = () => {
 
     const handleClearFilters = () => {
         setKeywords("");
-        setDepartment("")
-        setPosition("")
-        setRole("")
+        setDepartment("");
+        setPosition("");
+        setRole("");
         router.replace(pathname);
     }
+
+    useEffect(() => {
+        if(query?.department) {
+            setDepartment(query?.department);
+        }
+        if(query?.position) {
+            setPosition(query?.position);
+        }
+        if(query?.role) {
+            setPosition(query?.role);
+        }
+        if(query?.role) {
+            setPosition(query?.keyword);
+        }
+    }, [query])
 
     return (
         <Card className="w-full flex items-end flex-wrap gap-3 p-4">

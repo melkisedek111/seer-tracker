@@ -50,7 +50,7 @@ const RequestCard = () => {
                     </div>
                     <div className="space-y-0">
                         <p className="text-sm text-muted-foreground">Request Details/Description of Work/Problem</p>
-                        <h5 className="font-semibold text-destructive">Network cables are not functioning properly</h5>
+                        <h5 className="font-semibold text-destructive">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, expedita commodi molestiae placeat vel eaque, suscipit ipsam, pariatur fuga dolore quisquam earum ratione modi odio officia voluptatibus officiis doloribus dicta!</h5>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-muted-foreground">Request Process</p>

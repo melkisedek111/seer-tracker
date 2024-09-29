@@ -47,8 +47,14 @@ export const NotificationProvider = ({ children }: TNotificationProviderProps) =
             if (params?.title) {
                 setTitle(params?.title);
             }
+
+            let message = params.message;
+            if(typeof params.message === 'object') {
+                message = Object.values(params.message);
+            }
+
             setStatus(params.status);
-            setMessage(params.message);
+            setMessage(message);
         }
     }
 

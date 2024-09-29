@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { createUserAction } from '@/app/actions/user.actions'
-import { ROLES } from '@/constants/index.types'
+import { ROLES, ROLES_CHECKBOX } from '@/constants/index.types'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AvatarSchema, CreateUserSchema } from '@/schemas/user.schema'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -28,10 +28,7 @@ import { useNotify } from '@/context/notification.context'
 import { Loader } from 'lucide-react'
 import FormButton from '@/components/shared/FormButton'
 
-const roles = ROLES.map(role => ({
-    id: role,
-    label: role
-}))
+
 
 const RefinedCreateUserSchema = CreateUserSchema.and(AvatarSchema).superRefine((val, ctx) => {
     if (val.password !== val.confirmPassword) {
@@ -75,7 +72,8 @@ const CreateUserForm = () => {
             username: data.username,
             password: data.password,
             confirmPassword: data.confirmPassword,
-            avatar: avatar
+            avatar: avatar,
+            isRegisteredByAdmin: true
         });
 
         notify(response, createUserForm)
@@ -334,7 +332,7 @@ const CreateUserForm = () => {
                                             <FormLabel className="text-base">Roles</FormLabel>
                                         </div>
                                         <div className="grid grid-cols-3 gap-3">
-                                            {roles.map((item) => (
+                                            {ROLES_CHECKBOX.map((item) => (
                                                 <FormField
                                                     key={item.id}
                                                     control={createUserForm.control}

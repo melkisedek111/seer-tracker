@@ -18,7 +18,7 @@ export const getUserByEmailOrUsernameOrEmployeeNumber = async (
 				employeeNumber: value,
 			},
 		],
-	});
+	}).lean();
 };
 
 export const getUserByParams = async (
@@ -40,6 +40,17 @@ export const getAllUsers = async (
 		select: "-password",
 		page: params.page,
 		limit: params.limit,
+		sort: {
+			createdAt: -1
+		},
 		populate: [{ path: "position" }, { path: "department" }],
 	})) as PaginateResult<UserType>;
 };
+
+export const updateUserByUserId = async (params: Partial<UserType>) => {
+	const { _id, ...otherUserData } = params;
+	return await User.updateOne(
+		{ _id: _id },
+		{ $set: { ...otherUserData} }
+	)
+}

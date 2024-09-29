@@ -47,3 +47,8 @@ export const MIS_SERVICES = {
 export const SERVICES = [
 
 ]
+
+export const ROLES_CHECKBOX = ROLES.map(role => ({
+    id: role,
+    label: role
+}))

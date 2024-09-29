@@ -1,10 +1,13 @@
-import Wrapper from "@/components/shared/Wrapper";
-import Image from "next/image";
+import React from 'react'
+import Wrapper from '@/components/shared/Wrapper'
+import HomePageContainer from './components/HomePageContainer'
 
-export default function Home() {
+const HomePage = () => {
     return (
-        <Wrapper title={"Dashboard"}>
-            a
+        <Wrapper title="Dashboard">
+            <HomePageContainer />
         </Wrapper>
-    );
+    )
 }
+
+export default HomePage
