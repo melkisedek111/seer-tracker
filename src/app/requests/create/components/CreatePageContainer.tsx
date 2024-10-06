@@ -23,7 +23,7 @@ import FormLoader from '@/components/shared/FormLoader';
 import ErrorContent from '@/components/shared/ErrorContent';
 import { useNotify } from '@/context/notification.context';
 import { StatusCodes } from 'http-status-codes';
-import { SERVICE_TYPES } from '@/constants/index.types';
+import { SERVICE_TYPES } from '@/constants/index.constants';
 
 const CreatePageContainer = () => {
     const { notify, simpleNotify } = useNotify();

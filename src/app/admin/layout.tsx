@@ -1,6 +1,6 @@
 import AuthWrapper from '@/components/shared/AuthWrapper'
 import Sidebar from '@/components/shared/Sidebar'
-import { ROLES_OBJ } from '@/constants/index.types'
+import { ROLES_OBJ } from '@/constants/index.constants'
 import React, { ReactNode } from 'react'
 
 const layout = ({ children }: { children: ReactNode }) => {

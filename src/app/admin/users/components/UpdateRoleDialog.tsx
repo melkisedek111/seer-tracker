@@ -14,7 +14,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ROLES_CHECKBOX } from "@/constants/index.types";
+import { ROLES_CHECKBOX } from "@/constants/index.constants";
 import { useNotify } from "@/context/notification.context";
 import { UpdateRoleSchema } from "@/schemas/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";

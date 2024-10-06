@@ -13,6 +13,7 @@ type TUserSessionContext = {
     handleUserSession: ({ user, session }: { user: User, session: Session }) => void;
     isLoadingUser: boolean;
     isLoggedIn: boolean;
+    handleRemoveUserSession: () => void;
 };
 
 const UserSessionContext = createContext<TUserSessionContext>(
@@ -43,6 +44,12 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
         setIsLoggedIn(true);
     }
 
+    const handleRemoveUserSession = () => {
+        setSession(undefined);
+        setUser(undefined);
+        setRole(undefined);
+        setIsLoggedIn(false);
+    }
     useEffect(() => {
         setIsLoadingUser(true);
         try {
@@ -52,6 +59,8 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
                 setUser(data.user);
                 setRole(data.user.role);
                 setIsLoadingUser(false);
+            } else {
+                handleRemoveUserSession();
             }
             if(!isLoading) {
                 setIsLoadingUser(false);
@@ -67,9 +76,10 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
         role,
         handleUserSession,
         isLoadingUser,
-        isLoggedIn
+        isLoggedIn,
+        handleRemoveUserSession
     }
-
+    console.log(role)
     return (
         <UserSessionContext.Provider value={values}>
             {children}

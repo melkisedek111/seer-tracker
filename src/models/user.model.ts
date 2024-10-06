@@ -1,4 +1,4 @@
-import { ROLES } from "@/constants/index.types";
+import { ROLES } from "@/constants/index.constants";
 import { MODEL_NAMES } from "@/constants/model.constants";
 import { OverwriteSchema } from "@/lib/mongodb";
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";

@@ -3,7 +3,7 @@ import ServerAction, {
 	CustomThrowError,
 	ParsedError,
 	Response,
-} from "@/lib/server-action.helper";
+} from "@/app/actions/server-action.helper";
 import User, { UserType } from "@/models/user.model";
 import {
 	TApprovedUserParams,

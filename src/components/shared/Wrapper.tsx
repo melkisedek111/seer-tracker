@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { ArrowLeftFromLine, ChevronLeft } from 'lucide-react';
 import { useUserSession } from '@/context/session.context';
-import { ROLES_OBJ } from '@/constants/index.types';
+import { ROLES_OBJ } from '@/constants/index.constants';
 
 type TWrapperProps = {
     title: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import { ResponseAction } from "@/lib/server-action.helper";
+import { ResponseAction } from "@/app/actions/server-action.helper";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 

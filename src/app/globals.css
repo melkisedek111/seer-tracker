@@ -138,6 +138,18 @@
       font-style: normal;
     }
 
+    .masonry {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-auto-rows: 1fr;
+      grid-gap: 16px;
+    }
+
+    .masonry>* {
+      break-inside: avoid;
+      margin-bottom: 16px;
+    }
+
     /*
  *  STYLE 4
  */
@@ -164,6 +176,7 @@
     scrollbar-width: thin;
     scrollbar-color: var(--muted) orange;
   }
+
   body {
     @apply bg-background text-foreground;
   }

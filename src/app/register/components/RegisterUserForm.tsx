@@ -26,6 +26,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { registerUserAction } from '@/app/actions/user.actions';
 import { Card } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
 
 type TRegisterUserFormPros = {
     setIsSuccess: (value: boolean) => void
@@ -34,6 +35,7 @@ type TRegisterUserFormPros = {
 const RegisterUserForm = ({ setIsSuccess }: TRegisterUserFormPros) => {
     const { data, isLoading } = useCustomSWR(ENDPOINTS.GET_POSITIONS_AND_DEPARTMENTS, getFilterPositionsAndDepartmentsAction);
     const { notify } = useNotify();
+    const router = useRouter();
     const formRef = useRef<HTMLFormElement>(null)
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const RegisterUserSchema = RegisterUserWithNoRoleSchema.and(AvatarSchema).superRefine((val, ctx) => {
@@ -75,10 +77,12 @@ const RegisterUserForm = ({ setIsSuccess }: TRegisterUserFormPros) => {
             username: data.username,
             password: data.password,
             confirmPassword: data.confirmPassword,
-            avatar: avatar
+            avatar: avatar,
+            isRegisteredByAdmin: false
         });
 
-        notify(response, createUserForm)
+        notify(response, createUserForm);
+
         if (response?.ok && response?.data?.isUserCreated) {
             createUserForm.resetField("firstName", { defaultValue: "" })
             createUserForm.resetField("middleName", { defaultValue: "" })
@@ -96,14 +100,13 @@ const RegisterUserForm = ({ setIsSuccess }: TRegisterUserFormPros) => {
             createUserForm.resetField("avatar", { defaultValue: "" })
             setSelectedImage(null);
             createUserForm.reset();
-            formRef?.current?.reset();
             setIsSuccess(true);
         }
     }
 
     return (
         <Form {...createUserForm}>
-            <form ref={formRef} onSubmit={createUserForm.handleSubmit(onSubmit)} className="">
+            <form onSubmit={createUserForm.handleSubmit(onSubmit)} autoComplete='off'>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                     <div className="space-y-3">
                         <h5 className="text-lg font-semibold">
@@ -370,7 +373,7 @@ const RegisterUserForm = ({ setIsSuccess }: TRegisterUserFormPros) => {
                 </div>
                 <div className="flex items-center justify-between py-5 w-full gap-2 flex-wrap-reverse">
                     <Link href="/sign-in" className="w-full sm:w-auto">
-                        <Button variant={"link"} className="w-full">
+                        <Button  type="button" variant={"link"} className="w-full">
                             Sign In
                         </Button>
                     </Link>

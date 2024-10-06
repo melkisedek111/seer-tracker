@@ -26,6 +26,7 @@ import { UserActionDropdown } from "./UserActionDropdown";
 import { TUser } from "@/types/user.types";
 import { useNotify } from "@/context/notification.context";
 import { UpdateRoleDialog } from "./UpdateRoleDialog";
+import React from "react";
 
 export const DIALOGS_TO_OPEN = {
     UPDATE_ROLE_DIALOG: "UPDATE_ROLE_DIALOG"
@@ -45,7 +46,7 @@ export default function UsersTable() {
     const handleGetUserDetails = async (userId: string, selectedDialog: string) => {
         const response = await getUserDetailsAction({ userId: userId });
         notify(response);
-        console.log(response)
+
         if(response?.ok && response?.data?._id) {
             setSelectedUser(response.data);
             setSelectedDialog(selectedDialog);

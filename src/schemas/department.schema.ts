@@ -50,3 +50,14 @@ export const UpdateDepartmentSchema = z.object({
 			message: "Department Initials name is required.",
 		}),
 });
+
+
+export const GetUsersWithDesignationByDepartmentSchema = z.object({
+	departmentId: z
+		.string({
+			required_error: "Department ID is required.",
+		})
+		.min(1, {
+			message: "Department ID is required.",
+		}),
+});

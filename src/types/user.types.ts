@@ -1,4 +1,4 @@
-import { ROLES } from "@/constants/index.types";
+import { ROLES } from "@/constants/index.constants";
 import { UserType } from "@/models/user.model";
 import mongoose from "mongoose";
 

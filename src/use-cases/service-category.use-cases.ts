@@ -4,7 +4,7 @@ import {
 	getServiceCategories,
 	getServiceCategoryByParams,
 } from "@/data-access/service-category.data-access";
-import { CustomThrowError } from "@/lib/server-action.helper";
+import { CustomThrowError } from "@/app/actions/server-action.helper";
 import { TCreateServiceCategoryParams } from "@/types/serviceCategory.types";
 
 export const createServiceCategoryUseCase = async (

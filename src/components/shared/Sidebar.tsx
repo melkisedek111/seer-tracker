@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useUserSession } from '@/context/session.context';
+import { ROLES_OBJ } from '@/constants/index.constants';
 
 type TSidebarProps = {
     children: ReactNode;
@@ -20,7 +21,7 @@ const Sidebar = ({ children }: TSidebarProps) => {
     const user = useUserSession();
     let links: any[] = [];
 
-    if (user?.role) {
+    if (user.role?.includes(ROLES_OBJ.EMPLOYEE)) {
         links = [
             {
                 link: "/",
@@ -33,37 +34,36 @@ const Sidebar = ({ children }: TSidebarProps) => {
                 Icon: ListCheck
             },
         ];
+    } else if ([ROLES_OBJ.SUPER_ADMIN, ROLES_OBJ.ADMIN].find(role => user.role?.includes(role))) {
+
+        links = [
+            {
+                link: "/admin",
+                title: "Dashboard",
+                Icon: Home
+            },
+            {
+                link: "/admin/users",
+                title: "Users",
+                Icon: User
+            },
+            {
+                link: "/admin/requests",
+                title: "Requests",
+                Icon: ListCheck
+            },
+            {
+                link: "/admin/settings",
+                title: "Settings",
+                Icon: Cog
+            },
+            {
+                link: "/admin/designations",
+                title: "Designations",
+                Icon: FileText
+            },
+        ];
     }
-
-
-
-    // const ADMIN_LINKS = [
-    //     {
-    //         link: "/admin",
-    //         title: "Dashboard",
-    //         Icon: Home
-    //     },
-    //     {
-    //         link: "/admin/users",
-    //         title: "Users",
-    //         Icon: User
-    //     },
-    //     {
-    //         link: "/admin/requests",
-    //         title: "Requests",
-    //         Icon: ListCheck
-    //     },
-    //     {
-    //         link: "/admin/settings",
-    //         title: "Settings",
-    //         Icon: Cog
-    //     },
-    //     {
-    //         link: "/admin/designations",
-    //         title: "Designations",
-    //         Icon: FileText
-    //     },
-    // ]
 
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -81,7 +81,7 @@ const Sidebar = ({ children }: TSidebarProps) => {
                                     <Link
                                         href={link.link}
                                         className={
-                                            cn("flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary", 
+                                            cn("flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                                                 pathname === "/" && link.link === "/" && "text-primary",
                                                 link.link !== "/" && pathname !== "/" && pathname.startsWith(link.link) && "text-primary"
                                             )

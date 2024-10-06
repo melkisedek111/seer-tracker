@@ -1,11 +1,11 @@
 "use server";
-import { ROLES_OBJ } from "@/constants/index.types";
+import { ROLES_OBJ } from "@/constants/index.constants";
 import { MESSAGES } from "@/constants/message.constants";
 import ServerAction, {
 	CustomThrowError,
 	ParsedError,
 	Response,
-} from "@/lib/server-action.helper";
+} from "@/app/actions/server-action.helper";
 import { CreateServiceCategorySchema } from "@/schemas/service-category.schema";
 import {
 	TCreateServiceCategoryParams,
@@ -40,7 +40,6 @@ export const getServiceCategoryAction = ServerAction<
 	TGetServiceCategoriesReturn,
 	any
 >(
-	{ authorized: [ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN] },
 	CreateServiceCategorySchema,
 	async () => {
 		try {

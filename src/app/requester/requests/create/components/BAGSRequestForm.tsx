@@ -20,7 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { ChangeEvent, useEffect, useState } from "react"
 import { CheckedState } from "@radix-ui/react-checkbox"
 import { RequestFilesSchema, BAGSRequestSchema } from "@/schemas/request.schema"
-import { BAGS_SERVICES } from "@/constants/index.types"
+import { BAGS_SERVICES } from "@/constants/index.constants"
 
 
 type TBAGSRequestFormProps = {

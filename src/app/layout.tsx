@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/sonner";
 import NotificationWrapper from "@/components/shared/NotificationContainer";
 import dbConnect from "@/lib/mongodb";
 import { UserSessionProvider } from "@/context/session.context";
+import SessionWrapper from "@/components/shared/SessionWrapper";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -41,9 +42,11 @@ export default async function RootLayout({
           <UserSessionProvider>
             <NotificationProvider>
               <NotificationWrapper>
-                <PageContainer>
-                  {children}
-                </PageContainer>
+                <SessionWrapper>
+                  <PageContainer>
+                    {children}
+                  </PageContainer>
+                </SessionWrapper>
               </NotificationWrapper>
               <Toaster richColors position="bottom-right" expand={true} />
             </NotificationProvider>

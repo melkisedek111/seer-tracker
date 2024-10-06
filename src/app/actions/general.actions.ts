@@ -2,7 +2,7 @@
 import ServerAction, {
 	ParsedError,
 	Response,
-} from "@/lib/server-action.helper";
+} from "@/app/actions/server-action.helper";
 import { TGetFilterPositionsAndDepartmentsReturn } from "@/types/general.types";
 import { getFilterPositionsAndDepartmentsUseCase } from "@/use-cases/general.user-cases";
 

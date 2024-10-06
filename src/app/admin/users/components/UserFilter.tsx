@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Filter, X } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { ROLES } from '@/constants/index.types';
+import { ROLES } from '@/constants/index.constants';
 import { ENDPOINTS } from '@/constants/endpoints.types';
 import useCustomSWR from '@/hooks/useCustomSWR';
 import { getFilterPositionsAndDepartmentsAction } from '@/app/actions/general.actions';

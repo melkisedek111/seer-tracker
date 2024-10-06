@@ -8,10 +8,19 @@ export const MESSAGES = {
     SERVICE_CATEGORY_NAME_EXISTS: "Service category name already exists",
     SERVICE_CATEGORY_CREATE_FAILED: "Failed to create service category. Please refresh your page.",
     SERVICE_CATEGORY_CREATE_SUCCESS: "Service category successfully created.",
+    SERVICE_CATEGORY_NOT_EXIST: "Service category does not exists.",
     USER_STATUS_UPDATED: "User status has been updated.",
     USER_NOT_EXISTS: "User does not exists.",
     ACCOUNT_REGISTER_SUCCESS: "You have successfully created your account.",
     USER_APPROVED_SUCCESS: "User has been successfully approved.",
     USER_UPDATED_ROLES_SUCCESS: "User role has been updated.",
-    USER_UPDATED_ROLES_FAILED: "User role has failed to updated."
+    USER_UPDATED_ROLES_FAILED: "User role has failed to updated.",
+
+    REQUEST_TITLE_EXIST: "Request title already exists.",
+    CREATE_REQUEST_FAILED: "Failed to create request. Please refresh the page.",
+    CREATE_REQUEST_SUCCESS: "Your request has been created.",
+    DESIGNATION_NOT_EXISTS: "Designation does not exist. Please refresh the page.",
+    ASSIGN_DESIGNATION_SUCCESS: "Selected employee has been successfully assigned.",
+    ASSIGN_DESIGNATION_FAILED: "Failed to assign designation, Please refresh the page.",
+    REMOVE_DESIGNATION_FAILED: "Failed to remove designation, Please refresh the page."
 }

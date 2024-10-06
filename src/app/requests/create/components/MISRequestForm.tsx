@@ -17,22 +17,98 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { MISRequestSchema, RequestFilesSchema } from "@/schemas/request.schema"
+import PlateEditor from "./RTE"
+import { serializeHtml } from '@udecode/plate-serializer-html';
+import PlateEditorRead from "./RTESerialize"
+import PlateJSEditor from "@/components/shared/PlateJSEditor"
+import { createRequestAction } from "@/app/actions/request.actions"
+import { useState } from "react"
+import FilePreview from "@/components/shared/PreviewUploadedFile"
+import { useNotify } from "@/context/notification.context"
+import ButtonLoader from "@/components/shared/ButtonLoader"
 
 type TMISRequestFormProps = {
     serviceCategory: string
 }
 
+export const plateJsInitialValue =   [
+    { children: [ { text: '' } ], type: 'p', id: 'dixs2' }
+  ]
+
 const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
-    const MISRequestFormAndFileSchema = MISRequestSchema.and(RequestFilesSchema)
+    const { notify } = useNotify();
+    const MISRequestFormAndFileSchema = MISRequestSchema.and(RequestFilesSchema).superRefine((data, ctx) => {
+        // If the checkbox is checked, make inputField required
+        if (data.problemType === "Others" && !data?.otherProblem?.trim()) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["otherProblem"], // Target the inputField for the error
+                message: "Please specify the others.",
+            });
+        }
+
+        if (JSON.stringify(data.problemDetails) === JSON.stringify(plateJsInitialValue)) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["problemDetails"], // Target the inputField for the error
+                message: "Problem details is required.",
+            });
+        }
+    });
+    const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedFiles(e.target.files);
+    };
+
     const misRequestForm = useForm<z.infer<typeof MISRequestFormAndFileSchema>>({
         resolver: zodResolver(MISRequestFormAndFileSchema),
         defaultValues: {
             serviceCategory: serviceCategory,
+            problemDetails: plateJsInitialValue
         },
     });
-    function onSubmit(data: z.infer<typeof MISRequestFormAndFileSchema>) {
 
+    async function onSubmit(data: z.infer<typeof MISRequestFormAndFileSchema>) {
+        const fileFormData = new FormData();
+        if(data.attachments) {
+            for (const file of data?.attachments!) {
+                fileFormData.append(file.name, file);
+            }
+        }
+
+
+        const requestData = {
+            requestDetails: {
+                title: data.title,
+                serviceCategory: data.serviceCategory,
+                problemType: data.problemType,
+                problemDetails: data.problemDetails,
+                priorityLevel: data.priorityLevel,
+                otherProblem: data.otherProblem
+            },
+            files: fileFormData
+        };
+
+        const response = await createRequestAction(requestData);
+        notify(response);
+
+        if (response?.ok && response?.data?.isRequestCreated) {
+            misRequestForm.resetField("title", { defaultValue: "" });
+            misRequestForm.resetField("problemType", { defaultValue: "" });
+            misRequestForm.resetField("otherProblem", { defaultValue: "" });
+            misRequestForm.resetField("priorityLevel", { defaultValue: "" });
+            misRequestForm.resetField("attachments", { defaultValue: [] });
+            misRequestForm.setValue("title", "");
+            misRequestForm.setValue("problemType", "");
+            misRequestForm.setValue("otherProblem", "");
+            misRequestForm.setValue("priorityLevel", "");
+            misRequestForm.setValue("attachments", []);
+            misRequestForm.setValue("problemDetails", plateJsInitialValue);
+            setSelectedFiles(null);
+        }
     }
+
     return (
         <Form {...misRequestForm}>
             <form onSubmit={misRequestForm.handleSubmit(onSubmit)} className="grid col-span-4 w-full gap-4">
@@ -44,7 +120,7 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                             <FormLabel className="text-nowrap col-span-1">Request Title</FormLabel>
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl className="w-full">
-                                    <Input placeholder="e.g. Can't connect to the network" {...field} className="" />
+                                    <Input placeholder="e.g. Can't connect to the network" {...field} disabled={misRequestForm.formState.isSubmitting} />
                                 </FormControl>
                                 <FormMessage className="col-span-4" />
                             </div>
@@ -59,7 +135,7 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                             <FormLabel className="text-nowrap col-span-1">Problem Type</FormLabel>
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl className="w-full col-span-3">
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value} disabled={misRequestForm.formState.isSubmitting}>
                                         <SelectTrigger className="w-full col-span-3">
                                             <SelectValue placeholder="Select a problem type" />
                                         </SelectTrigger>
@@ -85,7 +161,7 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                             <FormLabel className="text-nowrap col-span-1">Problem (Others)</FormLabel>
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl className="w-full">
-                                    <Input placeholder="shadcn" {...field} className="" />
+                                    <Input placeholder="shadcn" {...field} disabled={misRequestForm.formState.isSubmitting} />
                                 </FormControl>
                                 <FormMessage className="col-span-4" />
                             </div>
@@ -95,17 +171,16 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                 />
                 <FormField
                     control={misRequestForm.control}
-                    name="problemType"
+                    name="problemDetails"
                     render={({ field }) => (
                         <FormItem className="grid grid-cols-4 w-full place-items-center">
                             <FormLabel className="text-nowrap col-span-1">Problem Details</FormLabel>
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl className="w-full">
-                                    <Textarea className="w-full" rows={5} />
+                                    <PlateJSEditor className="h-[300px]" value={field.value || []} setValue={field.onChange} disabled={misRequestForm.formState.isSubmitting} />
                                 </FormControl>
                                 <FormMessage className="col-span-4" />
                             </div>
-
                         </FormItem>
                     )}
                 />
@@ -118,9 +193,20 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl className="w-full">
                                     <div>
-                                        <Input type="file" className="" />
-                                        <div className="grid grid-cols-3 mt-3">
-                                            <span className="text-sm text-muted-foreground">No Selected Files / Media</span>
+                                        <Input
+                                            type="file"
+                                            multiple
+                                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
+                                            placeholder="shadcn" onChange={(event) => {
+                                                handleFileChange(event);
+                                                if (event.target?.files) {
+                                                    const files = Object.values(event.target?.files);
+                                                    console.log(files)
+                                                    field.onChange(files);
+                                                }
+                                            }} disabled={(misRequestForm.formState.isSubmitting)} />
+                                        <div className="w-full mt-3">
+                                            {selectedFiles ? <FilePreview files={selectedFiles} /> : <span className="text-sm text-muted-foreground">No Selected Files / Media</span>}
                                         </div>
                                     </div>
                                 </FormControl>
@@ -131,13 +217,13 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                 />
                 <FormField
                     control={misRequestForm.control}
-                    name="problemType"
+                    name="priorityLevel"
                     render={({ field }) => (
                         <FormItem className="grid grid-cols-4 w-full place-items-center">
                             <FormLabel className="text-nowrap col-span-1">Priority Level</FormLabel>
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value} disabled={misRequestForm.formState.isSubmitting}>
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select a priority level" />
                                         </SelectTrigger>
@@ -152,14 +238,13 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                                 </FormControl>
                                 <FormMessage className="col-span-4" />
                             </div>
-
                         </FormItem>
                     )}
                 />
                 <div className="w-full flex justify-end">
-                    <Button>
+                    <ButtonLoader isLoading={misRequestForm.formState.isSubmitting} disabled={misRequestForm.formState.isSubmitting}>
                         Create
-                    </Button>
+                    </ButtonLoader>
                 </div>
             </form>
         </Form>

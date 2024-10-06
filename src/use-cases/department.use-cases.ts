@@ -1,8 +1,10 @@
 import { createDepartment, getDepartmentByParams, getDepartmentId, getDepartments, updateDepartment } from "@/data-access/department.data-access";
 import { createPosition, getPositionById, getPositionByName, getPositions, updatePosition } from "@/data-access/position.data-access";
-import { CustomThrowError } from "@/lib/server-action.helper";
+import { getUserByParams, getUserDesignationWithPositionByDepartment } from "@/data-access/user.data-access";
+import { CustomThrowError } from "@/app/actions/server-action.helper";
+import { DesignationType } from "@/models/designation.model";
 import { PositionType } from "@/models/position.model";
-import { TCreateDepartmentParams, TGetDepartmentByIdParams, TUpdateDepartmentParams } from "@/types/department.types";
+import { TCreateDepartmentParams, TGetDepartmentByIdParams, TGetUsersWithDesignationByDepartmentIdParams, TUpdateDepartmentParams } from "@/types/department.types";
 import { TCreatePositionParams, TGetPositionByIdParams, TUpdatePositionParams } from "@/types/position.types";
 
 
@@ -52,4 +54,28 @@ export const updateDepartmentUseCase = async (params: TUpdateDepartmentParams) =
     if(!updatedDepartment) throw new CustomThrowError("Update department failed. please refresh the page.");
 
     return updatedDepartment;
+}
+
+
+export const getUsersWithDesignationByDepartmentIdUseCase = async (params: TGetUsersWithDesignationByDepartmentIdParams) => {
+    const department = await getDepartmentByParams({ _id: params.departmentId });
+
+    if(!department) throw new CustomThrowError("Department does not exists");
+
+    const userByDepartment = await getUserDesignationWithPositionByDepartment({ departmentId: params.departmentId });
+
+    const users = userByDepartment.map((user: any) => {
+        const position = user.position as PositionType;
+        const designation = user?.designation as DesignationType;
+
+        return {
+            userId: user._id,
+            name: user.fullName,
+            position: position.name,
+            designation: designation?.designation || null,
+            designatedAt: designation?.designatedAt || null
+        }
+    })
+    
+    return users;
 }

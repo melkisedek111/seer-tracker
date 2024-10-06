@@ -2,11 +2,11 @@
 import ServerAction, {
 	ParsedError,
 	Response,
-} from "@/lib/server-action.helper";
+} from "@/app/actions/server-action.helper";
 import { DepartmentType } from "@/models/department.model";
-import { CreateDepartmentSchema, GetDepartmentByIdSchema, UpdateDepartmentSchema } from "@/schemas/department.schema";
-import { TCreateDepartmentParams, TCreateDepartmentReturn, TGetDepartmentByIdParams, TUpdateDepartmentParams, TUpdateDepartmentReturn } from "@/types/department.types";
-import { createDepartmentUseCase, getDepartmentByIdUseCase, getDepartmentsUseCase, updateDepartmentUseCase } from "@/use-cases/department.use-cases";
+import { CreateDepartmentSchema, GetDepartmentByIdSchema, GetUsersWithDesignationByDepartmentSchema, UpdateDepartmentSchema } from "@/schemas/department.schema";
+import { TCreateDepartmentParams, TCreateDepartmentReturn, TGetDepartmentByIdParams, TGetUsersWithDesignationByDepartmentIdParams, TGetUsersWithDesignationByDepartmentIdReturn, TUpdateDepartmentParams, TUpdateDepartmentReturn } from "@/types/department.types";
+import { createDepartmentUseCase, getDepartmentByIdUseCase, getDepartmentsUseCase, getUsersWithDesignationByDepartmentIdUseCase, updateDepartmentUseCase } from "@/use-cases/department.use-cases";
 import { createPositionUseCase } from "@/use-cases/position.use-cases";
 
 
@@ -42,6 +42,15 @@ export const updateDepartmentAction = ServerAction<TUpdateDepartmentReturn, TUpd
 	try {
 		const department = await updateDepartmentUseCase(params);
 		return Response<TUpdateDepartmentReturn>({ data: { isDepartmentUpdated: true }, message: "Department is updated." });
+	} catch (error) {
+		return ParsedError(error);
+	}
+});
+
+export const getUsersWithDesignationByDepartmentIdAction = ServerAction<TGetUsersWithDesignationByDepartmentIdReturn[], TGetUsersWithDesignationByDepartmentIdParams>(GetUsersWithDesignationByDepartmentSchema, async (params) => {
+	try {
+		const users = await getUsersWithDesignationByDepartmentIdUseCase(params);
+		return Response<TGetUsersWithDesignationByDepartmentIdReturn[]>({ data: users });
 	} catch (error) {
 		return ParsedError(error);
 	}

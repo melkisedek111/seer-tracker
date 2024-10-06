@@ -11,16 +11,7 @@ type TAuthWrapperProps = {
 }
 
 const AuthWrapper = ({ roles, children }: TAuthWrapperProps) => {
-    const { isLoadingUser, session, role } = useUserSession();
-    const router = useRouter();
-    
-    console.log(session, isLoadingUser)
-    if(isLoadingUser) return <LoadingPage />
-    
-    if(!session) {
-        router.push("/sign-in");
-        return;
-    }
+    const { role } = useUserSession();
 
     if(!roles.some(r => role?.includes(r))) {
         return <Unauthorized /> 

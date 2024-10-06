@@ -4,7 +4,7 @@ import { cache } from "react";
 import { lucia } from "../../lib/lucia/auth";
 import { Session, User } from "lucia";
 import { redirect } from "next/navigation";
-import { Response } from "@/lib/server-action.helper";
+import { Response } from "@/app/actions/server-action.helper";
 
 type TUserSession = {
 	user: User | null;

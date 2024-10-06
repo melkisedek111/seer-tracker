@@ -6,12 +6,12 @@ import {
 	updateUserByUserId,
 } from "@/data-access/user.data-access";
 import { deleteFile, SingleFileUpload } from "@/lib/file.helper";
-import { CustomThrowError } from "@/lib/server-action.helper";
+import { CustomThrowError } from "@/app/actions/server-action.helper";
 import { TApprovedUserParams, TCreateUserParams, TGetAllUsersParams, TGetUserDetailParams, TRegisterUserParams, TSetUserStatusParams, TUpdateUserRoleParams } from "@/types/user.types";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { UserType } from "@/models/user.model";
-import { ROLES, ROLES_OBJ } from "@/constants/index.types";
+import { ROLES, ROLES_OBJ } from "@/constants/index.constants";
 
 export const createUserUseCase = async (params: TCreateUserParams & TRegisterUserParams) => {
 	const errors: Record<string, string> = {};
@@ -47,8 +47,8 @@ export const createUserUseCase = async (params: TCreateUserParams & TRegisterUse
 		const hashedPassword = bcrypt.hashSync(params.password, 10);
 
 		const data = {
-			fullName: [params.firstName, params.middleName, params.lastName].join(
-				"_"
+			fullName: [params.firstName, params.middleName || "", params.lastName].join(
+				" "
 			),
 			firstName: params.firstName,
 			middleName: params.middleName || null,

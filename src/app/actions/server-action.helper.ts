@@ -1,5 +1,9 @@
 import { z, ZodError } from "zod";
 import { StatusCodes } from "http-status-codes";
+import { getUserSession } from "@/app/lib/session";
+import { lucia } from "../../lib/lucia/auth";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export type ResponseAction<T = any> = {
 	status?: number;
@@ -143,30 +147,20 @@ function ServerAction<T, U>(
 	}
 	
 	return async (params: U) => {
-		// if (options?.authorized) {
-		// 	const { user, session } = await getUserSession();
+		if (options?.authorized) {
+			const { user, session } = await getUserSession();
 
-		// 	let redirectPathByUser = await getUserRedirectPath(
-		// 		user?.role,
-		// 		options?.redirectPath
-		// 	);
-		// 	if (!user || !session) {
-		// 		return redirect(redirectPathByUser);
-		// 	}
-
-		// 	if (!options?.authorized?.includes(user?.role!) && options?.isLogout) {
-		// 		await lucia.invalidateSession(session?.id!);
-		// 		const sessionCookie = lucia.createBlankSessionCookie();
-		// 		cookies().set(
-		// 			sessionCookie.name,
-		// 			sessionCookie.value,
-		// 			sessionCookie.attributes
-		// 		);
-		// 		return redirect(redirectPathByUser);
-		// 	} else if (!options?.authorized?.includes(user?.role!)) {
-		// 		return redirect(redirectPathByUser);
-		// 	}
-		// }
+			if (!user?.role.find((role: string) => options?.authorized?.includes(role))) {
+				// await lucia.invalidateSession(session?.id!);
+				// const sessionCookie = lucia.createBlankSessionCookie();
+				// cookies().set(
+				// 	sessionCookie.name,
+				// 	sessionCookie.value,
+				// 	sessionCookie.attributes
+				// );
+				return redirect("/");
+			}
+		}
 
 		if (schema && schema instanceof z.ZodObject && params !== undefined) {
 			try {

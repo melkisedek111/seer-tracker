@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { CustomThrowError } from "./server-action.helper";
+import { CustomThrowError } from "../app/actions/server-action.helper";
 import { MODEL_FILEPATH_NAME, MODEL_NAMES } from "@/constants/model.constants";
 
 export function OverwriteSchema(modelName: string) {

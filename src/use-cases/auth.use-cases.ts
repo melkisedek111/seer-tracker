@@ -1,7 +1,7 @@
 "use server";
 import { getUserByEmailOrUsernameOrEmployeeNumber } from "@/data-access/user.data-access";
 import { lucia } from "@/lib/lucia/auth";
-import { CustomThrowError } from "@/lib/server-action.helper";
+import { CustomThrowError } from "@/app/actions/server-action.helper";
 import { getUserSession } from "@/app/lib/session";
 import { TSignInParams } from "@/types/auth.types";
 import bcrypt from "bcrypt";

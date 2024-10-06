@@ -4,13 +4,29 @@ export const ROLES_OBJ = {
     SUPER_ADMIN: "Super Admin",
     ADMIN: "Admin",
     EMPLOYEE: "Employee",
-    UNIT_HEAD: "Unit Head",
-    RECOMMENDING_APPROVER: "Recommending Approver",
-    SERVICE_APPROVER: "Service Approver"
 };
 
 export const ROLES = Object.values(ROLES_OBJ);
 
+export const DESIGNATIONS = {
+    UNIT_HEAD: "Unit Head",
+    RECOMMENDING_APPROVER: "Recommending Approver",
+    SERVICE_APPROVER: "Service Approver"
+}
+
+export const DESIGNATION_LIST = Object.values(DESIGNATIONS);
+
+export const DESIGNATION_COLOR = {
+    [DESIGNATIONS.UNIT_HEAD]: "text-yellow-600",
+    [DESIGNATIONS.RECOMMENDING_APPROVER]: "text-red-600",
+    [DESIGNATIONS.SERVICE_APPROVER]: "text-indigo-700"
+}
+
+export const DESIGNATION_BG_COLOR = {
+    [DESIGNATIONS.UNIT_HEAD]: "bg-yellow-600",
+    [DESIGNATIONS.RECOMMENDING_APPROVER]: "bg-red-600",
+    [DESIGNATIONS.SERVICE_APPROVER]: "bg-indigo-700"
+}
 
 export const ERRORS_CODES = [
 	StatusCodes.BAD_REQUEST,
@@ -52,3 +68,14 @@ export const ROLES_CHECKBOX = ROLES.map(role => ({
     id: role,
     label: role
 }))
+
+export const SERVICE_CATEGORIES = {
+    MANAGEMENT_INFORMATION_SYSTEM: "Management Information System",
+    BUILDING_AND_GROUNDS_SERVICES: "Building and Grounds Services"
+}
+
+export const PRIORITY_LEVEL = {
+    HIGH: "high",
+    NORMAL: "normal",
+    LOW: "low"
+}

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 
 const RegisterPageContainer = () => {
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
-
+    console.log(isSuccess)
     return (
         <div className="w-screen h-screen grid place-items-center">
             <div className="max-w-[1500px] w-full mx-auto space-y-5 px-4">

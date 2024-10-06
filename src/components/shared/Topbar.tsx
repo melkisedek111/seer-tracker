@@ -1,3 +1,4 @@
+"use client";
 import React from 'react'
 import { Bell, CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -8,8 +9,17 @@ import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Input } from '../ui/input';
 import DarkModeToggle from './DarkModeToggle';
+import { logoutUserAction } from '@/app/actions/auth.actions';
+import { useUserSession } from '@/context/session.context';
 
 const TopBar = () => {
+    const { handleRemoveUserSession } = useUserSession();
+
+    const handleLogout = async () => {
+        handleRemoveUserSession();
+        await logoutUserAction({});
+    }
+
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
             <Sheet>
@@ -115,7 +125,7 @@ const TopBar = () => {
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>

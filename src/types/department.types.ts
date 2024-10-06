@@ -1,3 +1,10 @@
+export type TDepartment = {
+    _id: string;
+    name: string;
+    isDeleted: string;
+    isActive: string;
+    isArchived: string;
+}
 
 export type TCreateDepartmentParams = {
     name: string;
@@ -20,4 +27,16 @@ export type TUpdateDepartmentParams = {
 
 export type TUpdateDepartmentReturn = {
     isDepartmentUpdated: boolean;
+}
+
+export type TGetUsersWithDesignationByDepartmentIdParams = {
+    departmentId: string;
+}
+
+export type TGetUsersWithDesignationByDepartmentIdReturn = {
+    userId: string;
+    name: string;
+    position: string;
+    designation: string | null;
+    designatedAt: Date | null;
 }

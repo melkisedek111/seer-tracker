@@ -3,7 +3,7 @@ import Image from 'next/image'
 import React from 'react'
 import SigInForm from './components/SigInForm'
 import { useUserSession } from '@/context/session.context'
-import { ROLES_OBJ } from '@/constants/index.types'
+import { ROLES_OBJ } from '@/constants/index.constants'
 import { useRouter } from 'next/navigation';
 
 const SignInPage = () => {
@@ -12,10 +12,8 @@ const SignInPage = () => {
 
     if([ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN].includes(user?.role)) {
         router.push("/admin")
-        return;
     } else if(user?.role) {
         router.push("/")
-        return;
     }
 
     return (

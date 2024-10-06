@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useNotify } from '@/context/notification.context';
 import { toast } from "sonner"
 import { Toaster } from "@/components/ui/sonner"
-import { ERRORS_CODES, SUCCESS_CODES } from '@/constants/index.types';
+import { ERRORS_CODES, SUCCESS_CODES } from '@/constants/index.constants';
 
 const NotificationWrapper = ({ children }: { children: ReactNode }) => {
     const { status, message, resetNotify, title } = useNotify();

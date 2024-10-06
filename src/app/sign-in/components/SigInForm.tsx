@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input'
-import { ROLES_OBJ } from '@/constants/index.types';
+import { ROLES_OBJ } from '@/constants/index.constants';
 import { useNotify } from '@/context/notification.context';
 import { useUserSession } from '@/context/session.context';
 import { SignInFormSchema } from '@/schemas/auth.schema';
@@ -29,9 +29,9 @@ const SigInForm = () => {
 
         if (response?.ok && (response?.data?.user && response?.data?.session)) {
             handleUserSession(response?.data);
-            console.log([ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN].some(role => response?.data?.user?.role.includes(role)))
+
             if ([ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN].some(role => response?.data?.user?.role.includes(role))) {
-                router.push("/admin")
+                router.push("/admin");
             }
         }
     }
@@ -59,6 +59,7 @@ const SigInForm = () => {
                                             type="username"
                                             placeholder="e.g. john_doe"
                                             {...field}
+                                            disabled={signInForm.formState.isSubmitting}
                                         />
                                         <FormMessage />
                                     </FormItem>
@@ -75,12 +76,13 @@ const SigInForm = () => {
                                             type="password"
                                             placeholder="put your secret here."
                                             {...field}
+                                            disabled={signInForm.formState.isSubmitting}
                                         />
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full" disabled={signInForm.formState.isSubmitting}>
                                 Login
                             </Button>
                             <Button variant="outline" className="w-full">

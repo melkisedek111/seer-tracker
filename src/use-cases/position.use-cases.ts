@@ -1,5 +1,5 @@
 import { createPosition, getPositionById, getPositionByName, getPositions, updatePosition } from "@/data-access/position.data-access";
-import { CustomThrowError } from "@/lib/server-action.helper";
+import { CustomThrowError } from "@/app/actions/server-action.helper";
 import { PositionType } from "@/models/position.model";
 import { TCreatePositionParams, TGetPositionByIdParams, TUpdatePositionParams } from "@/types/position.types";
 

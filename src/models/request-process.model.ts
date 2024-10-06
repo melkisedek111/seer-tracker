@@ -5,70 +5,120 @@ import { ServiceCategoryType } from "./service-category.model";
 import { UserType } from "./user.model";
 import { RequestType } from "./request.model";
 
+export type TFilingUp = {
+	isCompleted: boolean;
+};
 
-type TFilingUp = {
-    isCompleted: boolean;
-}
+export type TUnitApproval = {
+	acknowledgeBy: UserType | null;
+	approvedAt: Date | null;
+	isRejected: boolean | null;
+	rejectedAt: Date | null;
+};
 
-type TUnitApproval = {
-    approvedBy: UserType;
-    approvedAt: Date;
-    isRejected: boolean;
-}
+export type TRecommendingApproval = {
+	// for BUGS
+	acknowledgeBy: UserType | null;
+	approvedAt: Date | null;
+	isRejected: boolean | null;
+	rejectedAt: Date | null;
+};
 
-type TRecommendingApproval = { // for BUGS
-    approvedBy: UserType;
-    approvedAt: Date;
-    isRejected: boolean;
-}
+export type TServiceUnitApproval = {
+	// for BUGS
+	acknowledgeBy: UserType | null;
+	serviceUnit: ServiceCategoryType | null;
+	approvedAt: Date | null;
+	isRejected: boolean | null;
+	rejectedAt: Date | null;
+};
 
-type TServiceUnitApproval = { // for BUGS
-    approvedBy: UserType;
-    serviceUnit: ServiceCategoryType;
-    approvedAt: Date;
-    isRejected: boolean;
-}
+export type TConfirmation = {
+	confirmedBy: UserType | null;
+	confirmedAt: Date | null;
+	isRejected: boolean | null;
+	rejectedAt: Date | null;
+};
 
-type TConfirmation = {
-    confirmedBy: UserType;
-    confirmedAt: Date;
-}
-
-type TAssignedPerson = {
-    assignedTo: UserType;
-    assignedBy: UserType;
-    assignedAt: Date;
-}
+export type TAssignedPerson = {
+	assignedTo: UserType | null;
+	assignedBy: UserType | null;
+	assignedAt: Date | null;
+	isRejected: boolean | null;
+	rejectedAt: Date | null;
+};
 
 export type RequestProcessType = Document & {
 	_id: string;
-    request: RequestType;
-    filingUp: TFilingUp;
-    unitApproval: TUnitApproval;
-    recommendingApproval :TRecommendingApproval;
-    serviceUnitApproval: TServiceUnitApproval;
-    confirmation: TConfirmation;
-    assignedPerson: TAssignedPerson;
+	request: RequestType;
+	filingUp: TFilingUp;
+	unitApproval: TUnitApproval;
+	recommendingApproval: TRecommendingApproval;
+	serviceUnitApproval: TServiceUnitApproval;
+	confirmation: TConfirmation;
+	assignedPerson: TAssignedPerson;
 	isDeleted: boolean;
 	isArchived: boolean;
 	isActive: boolean;
 	createdAt: Date;
 };
 
+export const defaultRequestProcess = {
+	filingUp: {
+		isCompleted: true,
+	},
+	unitApproval: {
+		acknowledgeBy: null,
+		approvedAt: null,
+		rejectedAt: null,
+		isRejected: null,
+	},
+	recommendingApproval: {
+		acknowledgeBy: null,
+		approvedAt: null,
+		rejectedAt: null,
+		isRejected: null,
+	},
+	serviceUnitApproval: {
+		acknowledgeBy: null,
+		serviceUnit: null,
+		approvedAt: null,
+		rejectedAt: null,
+		isRejected: null,
+	},
+	confirmation: {
+		confirmedBy: null,
+		confirmedAt: null,
+		rejectedAt: null,
+		isRejected: null,
+	},
+	assignedPerson: {
+		assignedTo: null,
+		assignedBy: null,
+		assignedAt: null,
+		rejectedAt: null,
+		isRejected: null,
+	},
+};
+
 const UnitApprovalSchema = new mongoose.Schema<TUnitApproval>(
 	{
-		approvedBy: {
+		acknowledgeBy: {
 			type: mongoose.Types.ObjectId,
-            default: null,
-            ref: MODEL_NAMES.USER
+			default: null,
+			ref: MODEL_NAMES.USER,
 		},
 		approvedAt: {
 			type: Date,
-            default: null,
+			default: null,
+		},
+		rejectedAt: {
+			type: Date,
+			default: null,
 		},
 		isRejected: {
 			type: Boolean,
-            default: false,
+			default: false,
 		},
 	},
 	{ _id: false }
@@ -76,18 +126,22 @@ const UnitApprovalSchema = new mongoose.Schema<TUnitApproval>(
 
 const RecommendingApprovalSchema = new mongoose.Schema<TRecommendingApproval>(
 	{
-		approvedBy: {
+		acknowledgeBy: {
 			type: mongoose.Types.ObjectId,
-            default: null,
-            ref: MODEL_NAMES.USER
+			default: null,
+			ref: MODEL_NAMES.USER,
 		},
 		approvedAt: {
 			type: Date,
-            default: null,
+			default: null,
+		},
+		rejectedAt: {
+			type: Date,
+			default: null,
 		},
 		isRejected: {
 			type: Boolean,
-            default: false,
+			default: false,
 		},
 	},
 	{ _id: false }
@@ -95,23 +149,27 @@ const RecommendingApprovalSchema = new mongoose.Schema<TRecommendingApproval>(
 
 const ServiceUnitApprovalSchema = new mongoose.Schema<TServiceUnitApproval>(
 	{
-		approvedBy: {
+		acknowledgeBy: {
 			type: mongoose.Types.ObjectId,
-            default: null,
-            ref: MODEL_NAMES.USER
+			default: null,
+			ref: MODEL_NAMES.USER,
 		},
-        serviceUnit: {
+		serviceUnit: {
 			type: mongoose.Types.ObjectId,
-            default: null,
-            ref: MODEL_NAMES.SERVICE_CATEGORY
-        },
+			default: null,
+			ref: MODEL_NAMES.SERVICE_CATEGORY,
+		},
 		approvedAt: {
 			type: Date,
-            default: null,
+			default: null,
+		},
+		rejectedAt: {
+			type: Date,
+			default: null,
 		},
 		isRejected: {
 			type: Boolean,
-            default: false,
+			default: false,
 		},
 	},
 	{ _id: false }
@@ -121,7 +179,7 @@ const FilingUpSchema = new mongoose.Schema<TFilingUp>(
 	{
 		isCompleted: {
 			type: Boolean,
-            default: false
+			default: false,
 		},
 	},
 	{ _id: false }
@@ -129,37 +187,51 @@ const FilingUpSchema = new mongoose.Schema<TFilingUp>(
 
 const ConfirmationSchema = new mongoose.Schema<TConfirmation>(
 	{
-        confirmedBy: {
+		confirmedBy: {
 			type: mongoose.Types.ObjectId,
-            default: null,
-            ref: MODEL_NAMES.USER
+			default: null,
+			ref: MODEL_NAMES.USER,
 		},
 		confirmedAt: {
 			type: Date,
-            default: null
+			default: null,
 		},
-
+		rejectedAt: {
+			type: Date,
+			default: null,
+		},
+		isRejected: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ _id: false }
 );
 
 const AssignedPersonSchema = new mongoose.Schema<TAssignedPerson>(
 	{
-        assignedTo: {
+		assignedTo: {
 			type: mongoose.Types.ObjectId,
-            default: null,
-            ref: MODEL_NAMES.USER
+			default: null,
+			ref: MODEL_NAMES.USER,
 		},
-        assignedBy: {
+		assignedBy: {
 			type: mongoose.Types.ObjectId,
-            default: null,
-            ref: MODEL_NAMES.USER
+			default: null,
+			ref: MODEL_NAMES.USER,
 		},
 		assignedAt: {
 			type: Date,
-            default: null
+			default: null,
 		},
-
+		rejectedAt: {
+			type: Date,
+			default: null,
+		},
+		isRejected: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ _id: false }
 );
@@ -169,31 +241,31 @@ const RequestProcessSchema = new mongoose.Schema<RequestProcessType>(
 		request: {
 			type: mongoose.Types.ObjectId,
 			required: true,
-            ref: MODEL_NAMES.REQUEST
+			ref: MODEL_NAMES.REQUEST,
 		},
 		filingUp: {
 			type: FilingUpSchema,
-            required: true
+			required: true,
 		},
-        unitApproval: {
+		unitApproval: {
 			type: UnitApprovalSchema,
-            required: true
+			required: true,
 		},
 		recommendingApproval: {
 			type: RecommendingApprovalSchema,
-			required: true
+			required: true,
 		},
 		serviceUnitApproval: {
 			type: ServiceUnitApprovalSchema,
-            required: true
+			required: true,
 		},
 		confirmation: {
 			type: ConfirmationSchema,
-            required: true
+			required: true,
 		},
-        assignedPerson: {
+		assignedPerson: {
 			type: AssignedPersonSchema,
-            required: true
+			required: true,
 		},
 		isDeleted: {
 			type: Boolean,
@@ -215,6 +287,9 @@ OverwriteSchema(MODEL_NAMES.REQUEST_PROCESS);
 
 const RequestProcess =
 	mongoose.models.RequestProcess ||
-	mongoose.model<RequestProcessType>(MODEL_NAMES.REQUEST_PROCESS, RequestProcessSchema);
+	mongoose.model<RequestProcessType>(
+		MODEL_NAMES.REQUEST_PROCESS,
+		RequestProcessSchema
+	);
 
 export default RequestProcess;

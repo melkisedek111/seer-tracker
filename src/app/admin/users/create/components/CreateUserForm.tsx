@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { createUserAction } from '@/app/actions/user.actions'
-import { ROLES, ROLES_CHECKBOX } from '@/constants/index.types'
+import { ROLES, ROLES_CHECKBOX } from '@/constants/index.constants'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AvatarSchema, CreateUserSchema } from '@/schemas/user.schema'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
