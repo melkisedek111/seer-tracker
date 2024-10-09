@@ -2,9 +2,12 @@
 import { getUserSession } from "@/app/lib/session";
 import { ENDPOINTS } from "@/constants/endpoints.types";
 import useCustomSWR from "@/hooks/useCustomSWR";
+import { socket } from "@/socket";
 import { Session, User } from "lucia";
+import { useRouter } from "next/navigation";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import useSWR from "swr";
+
 
 type TUserSessionContext = {
     session: Session | undefined;
@@ -31,16 +34,20 @@ export const useUserSession = () => {
 }
 
 export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => {
+    const router = useRouter();
     const { data, isLoading } = useSWR(ENDPOINTS.GET_USER_SESSION, getUserSession);
     const [session, setSession] = useState<Session | undefined>(undefined);
     const [user, setUser] = useState<User | undefined>(undefined);
     const [role, setRole] = useState<string | undefined>(undefined);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
+    const [designation, setDesignation] = useState<string | null>(null);
+
     const handleUserSession = ({ user, session }: { user: User, session: Session }) => {
         setSession(session);
         setUser(user);
         setRole(user.role);
+        setDesignation(user.designation);
         setIsLoggedIn(true);
     }
 
@@ -52,6 +59,7 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
     }
     useEffect(() => {
         setIsLoadingUser(true);
+
         try {
             if (data?.user && data?.session && !isLoading) {
                 setSession(data.session);
@@ -70,6 +78,12 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
         }
     }, [data, isLoading])
 
+    useEffect(() => {
+        if((!user || !session) && !isLoading) {
+            router.push("/sign-in");
+        }
+    }, [])
+
     const values = {
         session,
         user,
@@ -79,7 +93,7 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
         isLoggedIn,
         handleRemoveUserSession
     }
-    console.log(role)
+
     return (
         <UserSessionContext.Provider value={values}>
             {children}

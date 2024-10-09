@@ -1,6 +1,31 @@
+import { DepartmentType } from "@/models/department.model";
 import { RequestProcessType, TAssignedPerson, TConfirmation, TFilingUp, TRecommendingApproval, TServiceUnitApproval, TUnitApproval } from "@/models/request-process.model";
 import { ServiceCategoryType } from "@/models/service-category.model";
 import { UserType } from "@/models/user.model";
+
+export type TRequest = {
+    _id: string;
+	title: string;
+	serviceCategory: string | ServiceCategoryType;
+	requestUniqueId: string;
+	requestor: string | UserType;
+	department: string | DepartmentType;
+	problemDetails: any[];
+	priorityLevel: string;
+	services: string[] | null;
+	problemType: string | null;
+	otherProblem: string | null;
+	otherService: string | null;
+	currentStatus: string | null;
+	attachments: string[] | null;
+	startDateTime: Date | null;
+	endDateTime: Date | null;
+	isDeleted: boolean;
+	isArchived: boolean;
+	isActive: boolean;
+	createdAt: Date;
+}
+
 
 export type TCreateMISRequest = {
     serviceCategory: string;
@@ -31,8 +56,10 @@ export type TGetAllRequestParams = {
 	limit: number;
 	keywords: string;
 	serviceType: string;
-    serviceKeywordType: string;
-    dateRange: any;
+    requestProcess: string;
+    priorityLevel: string;
+    from: Date;
+    to: Date
 }
 
 export type TRequestProcess = {

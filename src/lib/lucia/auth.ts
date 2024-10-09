@@ -20,7 +20,10 @@ export const lucia = new Lucia(adapter, {
 			avatar: attributes.avatar,
 			email: attributes.email,
 			isActive: attributes.isActive,
-			isApproved: attributes.isApproved
+			isApproved: attributes.isApproved,
+			department: attributes.department,
+			position: attributes.position,
+			designation: null
 		};
 	},
 });
@@ -71,6 +74,9 @@ interface DatabaseUserAttributes {
 	email: string;
     fullName: string;
 	avatar: string | null;
+	department: string;
+	position: string;
+	designation: string | null;
     role: string;
 	isActive: boolean;
 	isApproved: boolean;

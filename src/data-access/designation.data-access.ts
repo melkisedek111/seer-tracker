@@ -10,6 +10,10 @@ export const getDesignationByParams = async (params: Partial<TDesignation>) => {
 	return await Designation.findOne(params).lean();
 };
 
+export const getDesignationsByParams = async (params: Partial<TDesignation>) => {
+	return await Designation.find(params).lean();
+};
+
 export const updateDesignationById = async (params: {
 	_id: string;
 	designation: string | null;
@@ -83,4 +87,9 @@ export const getAllDesignation = async () => {
 			$sort: { department: 1 }, // Optional: Sort departments by name
 		},
 	]).exec();
+};
+
+
+export const getDesignationByUser = async (params: { userId: string, departmentId: string }) => {
+	return await Designation.findOne({ user: params.userId, department: params.departmentId }).lean();
 };

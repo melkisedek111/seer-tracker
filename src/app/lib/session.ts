@@ -5,6 +5,8 @@ import { lucia } from "../../lib/lucia/auth";
 import { Session, User } from "lucia";
 import { redirect } from "next/navigation";
 import { Response } from "@/app/actions/server-action.helper";
+import { getDesignationByUser } from "@/data-access/designation.data-access";
+import { TDesignation } from "@/types/designation.types";
 
 type TUserSession = {
 	user: User | null;
@@ -16,9 +18,10 @@ export const parsedObject = (data: any) => JSON.parse(JSON.stringify(data));
 export const getUserSession = cache(async () => {
 	const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
 	if (!sessionId) return { user: null, session: null };
-
+	let userDetails: User & { designation: string };
 	try {
 		const { user, session } = await lucia.validateSession(sessionId);
+
 		if (session && session.fresh) {
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			cookies().set(
@@ -35,6 +38,15 @@ export const getUserSession = cache(async () => {
 				sessionCookie.attributes
 			);
 		}
+
+		if(user) {
+			const designation = await getDesignationByUser({ userId: user.id, departmentId: user.department }) as TDesignation;
+
+			if(designation) {
+				user.designation = designation.designation as any
+			}
+		}
+		
 		return parsedObject({ user, session });
 	} catch (error: any) {
 		console.log("User Session is not set!");

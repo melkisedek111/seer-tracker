@@ -12,11 +12,15 @@ import {
 	TGetAllRequestParams,
 	TGetAllRequestReturn,
 } from "@/types/request.types";
-import { createRequestUseCase, getAllRequestsUseCase } from "@/use-cases/request.use-case";
+import {
+	createRequestUseCase,
+	getAllRequestsUseCase,
+} from "@/use-cases/request.use-case";
 import { UploadRequestAttachments } from "@/utils/file-parser";
+import { Socket } from "socket.io";
 
 export const createRequestAction = ServerAction<
-	{ isRequestCreated: boolean },
+	{ isRequestCreated: boolean; requestId: string; requestedBy: string },
 	TCreateRequestParams
 >(
 	{ authorized: [ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN, ROLES_OBJ.EMPLOYEE] },
@@ -24,8 +28,12 @@ export const createRequestAction = ServerAction<
 	async (params) => {
 		try {
 			const result = await createRequestUseCase(params);
-			return Response<{ isRequestCreated: boolean }>({
-				data: { isRequestCreated: result.isRequestCreated },
+			return Response<{
+				isRequestCreated: boolean;
+				requestId: string;
+				requestedBy: string;
+			}>({
+				data: result,
 				message: MESSAGES.CREATE_REQUEST_SUCCESS,
 			});
 		} catch (error) {
@@ -34,23 +42,30 @@ export const createRequestAction = ServerAction<
 	}
 );
 
-export const getAllRequestsActions = ServerAction<TGetAllRequestReturn[], TGetAllRequestParams>(
+export const getAllRequestsActions = ServerAction<
+	TGetAllRequestReturn[],
+	TGetAllRequestParams
+>(
 	{ authorized: [ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN, ROLES_OBJ.EMPLOYEE] },
 	async (params) => {
 		try {
 			const page = params?.page || 1;
-			const limit = params?.limit || 5;
+			const limit = params?.limit || 9;
 			const keywords = params?.keywords || "";
 			const serviceType = params?.serviceType || "";
-			const serviceKeywordType = params?.serviceKeywordType || "";
-			const dateRange = params?.dateRange || "";
+			const requestProcess = params?.requestProcess || "";
+			const priorityLevel = params?.priorityLevel || "";
+			const from = params?.from || "";
+			const to = params?.to || "";
 			const result = await getAllRequestsUseCase({
 				page,
 				limit,
 				keywords,
 				serviceType,
-				serviceKeywordType,
-				dateRange,
+				requestProcess,
+				priorityLevel,
+				from,
+				to,
 			});
 			return Response<TGetAllRequestReturn[]>({
 				data: result,

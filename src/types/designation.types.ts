@@ -6,6 +6,9 @@ export type TDesignation = {
 	user: string;
 	department: string;
 	designation: string;
+	isActive: boolean;
+	isDeleted: boolean;
+	isArchived: boolean;
 	designatedAt: Date;
 };
 

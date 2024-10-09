@@ -96,7 +96,6 @@ import { plateJsInitialValue } from '@/app/requests/create/components/MISRequest
 import { PlateJSOptions } from './PageContainer';
 
 const editor = createPlateEditor({
-    id: 'rte',
     shouldNormalizeEditor: true,
    ...PlateJSOptions
 });
@@ -106,13 +105,18 @@ type TPlateJSEditorProps = {
     setValue: (params: any) => void;
     className?: string;
     disabled?: boolean;
+    isReset?: boolean;
 }
 
-export default function PlateJSEditor({ value, setValue, className, disabled }: TPlateJSEditorProps) {
-    if(JSON.stringify(value) === JSON.stringify(plateJsInitialValue)) {
+export default function PlateJSEditor({ value, setValue, className, disabled, isReset }: TPlateJSEditorProps) {
+    // if(JSON.stringify(value) === JSON.stringify(plateJsInitialValue)) {
+    //     editor.transforms.reset();
+    // } else {
+    //     editor.children = value;
+    // }
+
+    if(isReset) {
         editor.transforms.reset();
-    } else {
-        editor.children = value;
     }
     
     return (

@@ -13,7 +13,7 @@ export default function PlateEditorRead({ value }: { value: any }) {
         <DndProvider backend={HTML5Backend}>
             <TooltipProvider>
                 <Plate editor={editor} readOnly>
-                    <Editor className="h-full w-full border-none" />
+                    <Editor className="h-full w-full border-none group" />
                 </Plate>
             </TooltipProvider>
         </DndProvider>

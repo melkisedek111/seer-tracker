@@ -126,7 +126,7 @@ export const createRequestUseCase = async (params: TCreateRequestParams) => {
 
 		await session.commitTransaction();
 
-		return { isRequestCreated: true };
+		return { isRequestCreated: true, requestId: request[0]?._id.toString(), requestedBy: userDetails.fullName };
 	} catch (error: any) {
 		await session.abortTransaction();
 		for (const file of fileNamePlaceholder) {
@@ -140,7 +140,7 @@ export const createRequestUseCase = async (params: TCreateRequestParams) => {
 
 
 export const getAllRequestsUseCase = async (params: TGetAllRequestParams) => {
-	const requests =  await getAllRequests({});
+	const requests =  await getAllRequests(params);
 
 	const requestData: TGetAllRequestReturn[] = [];
 	for(const request of requests) {

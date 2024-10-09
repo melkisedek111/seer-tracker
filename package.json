@@ -2,11 +2,13 @@
   "name": "seer-tracker",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev -p 3002",
+    "dev": "next dev -p 3002 ",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "NODE_ENV=production node server.ts",
+    "lint": "next lint",
+    "node": "npx tsx server.ts -p 3002"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.11",
@@ -93,10 +95,13 @@
     "react-lite-youtube-embed": "^2.4.0",
     "react-tweet": "^3.2.1",
     "recharts": "^2.12.7",
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^4.8.0",
     "sonner": "^1.5.0",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "ts-loader": "^9.5.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {

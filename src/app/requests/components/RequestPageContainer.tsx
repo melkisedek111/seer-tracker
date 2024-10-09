@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React, { useEffect } from 'react'
 import RequestFilters from './RequestFilters'
 import RequestCard from '@/components/shared/RequestCard'
 import useCustomSWR from '@/hooks/useCustomSWR'
@@ -7,13 +7,19 @@ import { ENDPOINTS } from '@/constants/endpoints.types'
 import { getAllRequestsActions } from '@/app/actions/request.actions';
 import { TGetAllRequestParams, TGetAllRequestReturn } from '@/types/request.types';
 import PlateEditorRead from '../create/components/RTESerialize';
+import useQueryParams from '@/hooks/useQueryParams';
 
 const RequestPageContainer = () => {
-    const { data } = useCustomSWR(ENDPOINTS.GEL_ALL_REQUESTS, getAllRequestsActions);
+    const urlParams = useQueryParams();
+    const { data, mutate } = useCustomSWR(`${ENDPOINTS.GEL_ALL_REQUESTS}?${urlParams.toString()}`, getAllRequestsActions, urlParams);
 
     const getColumns = (columnIndex: number) => {
         return data?.data.filter((_, index: number) => index % 3 === columnIndex);
     }
+
+    useEffect(() => {
+        mutate()
+    }, [urlParams]);
 
     return (
         <main className="grid space-y-5">

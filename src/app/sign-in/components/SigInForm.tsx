@@ -28,6 +28,7 @@ const SigInForm = () => {
         notify(response);
 
         if (response?.ok && (response?.data?.user && response?.data?.session)) {
+            console.log(response?.data)
             handleUserSession(response?.data);
 
             if ([ROLES_OBJ.ADMIN, ROLES_OBJ.SUPER_ADMIN].some(role => response?.data?.user?.role.includes(role))) {

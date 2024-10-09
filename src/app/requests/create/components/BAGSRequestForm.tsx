@@ -37,6 +37,7 @@ const plateJsInitialValue = [
 
 const BAGSRequestForm = ({ serviceCategory }: TBAGSRequestFormProps) => {
     const [isOtherSelected, setIsOtherSelected] = useState<boolean>(false);
+    const [isReset, setIsReset] = useState<boolean>(false);
     const { notify } = useNotify();
     const services = [...Object.values(BAGS_SERVICES).map(service => ({ label: service, id: service })), {
         id: "Others",
@@ -113,10 +114,11 @@ const BAGSRequestForm = ({ serviceCategory }: TBAGSRequestFormProps) => {
             bAGSRequestForm.setValue("priorityLevel", "");
             bAGSRequestForm.setValue("attachments", []);
             bAGSRequestForm.setValue("problemDetails", plateJsInitialValue);
+            setIsReset(true);
             setSelectedFiles(null);
         }
     }
-
+    console.log(bAGSRequestForm.watch("problemDetails"))
     const handleSelectedServices = (checked: CheckedState, field: any, id: string) => {
         let existingServices = []
         if (id === "Others") {
@@ -229,7 +231,18 @@ const BAGSRequestForm = ({ serviceCategory }: TBAGSRequestFormProps) => {
                             <FormLabel className="text-nowrap col-span-1">Problem Details</FormLabel>
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl className="w-full">
-                                    <PlateJSEditor className="h-[300px]" value={field.value || []} setValue={field.onChange} disabled={bAGSRequestForm.formState.isSubmitting} />
+                                    <PlateJSEditor 
+                                        className="h-[300px]" 
+                                        value={field.value || []} 
+                                        setValue={(val) => {
+                                            if(isReset) {
+                                                setIsReset(false);
+                                            }
+                                            field.onChange(val);
+                                        }} 
+                                        disabled={bAGSRequestForm.formState.isSubmitting} 
+                                        isReset={isReset}
+                                    />
                                 </FormControl>
                                 <FormMessage className="col-span-4" />
                             </div>

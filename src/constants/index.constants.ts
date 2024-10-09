@@ -79,3 +79,18 @@ export const PRIORITY_LEVEL = {
     NORMAL: "normal",
     LOW: "low"
 }
+
+export const NOTIFICATION_TYPE = {
+    NEW_REQUEST: "New Request",
+    REQUEST_UPDATE: "Request Update",
+    NEW_MESSAGE: "New Message",
+    TO_APPROVED_REQUEST: "To Approved Request"
+}
+
+export const REQUEST_PROCESS = {
+    REQUEST_DETAILS: "Request Details",
+    UNIT_APPROVAL: "Unit Approval",
+    RECOMMENDING_APPROVAL: "Recommending Approval",
+    SERVICE_APPROVAL: "Service Approval",
+    ASSIGNED_APPROVAL: "Assigned Approval"
+}

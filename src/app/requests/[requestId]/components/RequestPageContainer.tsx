@@ -183,8 +183,8 @@ const RequestPageContainer = () => {
                         process.map((item, i) => (
                             <div className={
                                 cn("flex flex-col justify-evenly text-muted-foreground items-center p-2 text-center text-xs py-4 border-muted-foreground border-l-[3px] border-r-[3px]",
-                                    i % 2 === 0 && "border-b-[4px] !border-t-white border-t-[4px]",
-                                    i % 2 === 1 && "border-t-[4px] !border-b-white border-b-[4px]",
+                                    i % 2 === 0 && "border-b-[4px] !border-t-transparent border-t-[4px]",
+                                    i % 2 === 1 && "border-t-[4px] !border-b-transparent border-b-[4px]",
                                     i === 0 && "border-l-0",
                                     process.length - 1 === i && "border-r-0",
                                     item?.isRejected && "text-destructive",

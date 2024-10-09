@@ -67,7 +67,7 @@ const RequestCard = (props: TGetAllRequestReturn) => {
                     </div>
                     <div className="space-y-0">
                         <p className="text-sm text-muted-foreground">Request Details/Description of Work/Problem</p>
-                        <h5 className="!group-hover:bg-muted">
+                        <h5 className="!group-hover:bg-muted max-h-[300px] overflow-y-auto">
                             {
                                 props?.problemDetails?.length && <PlateEditorRead value={props?.problemDetails} />
                             }

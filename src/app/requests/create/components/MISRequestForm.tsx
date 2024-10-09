@@ -26,17 +26,22 @@ import { useState } from "react"
 import FilePreview from "@/components/shared/PreviewUploadedFile"
 import { useNotify } from "@/context/notification.context"
 import ButtonLoader from "@/components/shared/ButtonLoader"
+import { socket } from "@/socket"
+import { useUserSession } from "@/context/session.context"
+import { DESIGNATIONS, NOTIFICATION_TYPE } from "@/constants/index.constants"
 
 type TMISRequestFormProps = {
     serviceCategory: string
 }
 
-export const plateJsInitialValue =   [
-    { children: [ { text: '' } ], type: 'p', id: 'dixs2' }
-  ]
+export const plateJsInitialValue = [
+    { children: [{ text: '' }], type: 'p', id: 'dixs2' }
+]
 
 const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
     const { notify } = useNotify();
+    const { user } = useUserSession();
+    const [isReset, setIsReset] = useState<boolean>(false);
     const MISRequestFormAndFileSchema = MISRequestSchema.and(RequestFilesSchema).superRefine((data, ctx) => {
         // If the checkbox is checked, make inputField required
         if (data.problemType === "Others" && !data?.otherProblem?.trim()) {
@@ -71,12 +76,11 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
 
     async function onSubmit(data: z.infer<typeof MISRequestFormAndFileSchema>) {
         const fileFormData = new FormData();
-        if(data.attachments) {
+        if (data.attachments) {
             for (const file of data?.attachments!) {
                 fileFormData.append(file.name, file);
             }
         }
-
 
         const requestData = {
             requestDetails: {
@@ -99,13 +103,23 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
             misRequestForm.resetField("otherProblem", { defaultValue: "" });
             misRequestForm.resetField("priorityLevel", { defaultValue: "" });
             misRequestForm.resetField("attachments", { defaultValue: [] });
+            misRequestForm.resetField("problemDetails", { defaultValue: plateJsInitialValue });
             misRequestForm.setValue("title", "");
             misRequestForm.setValue("problemType", "");
             misRequestForm.setValue("otherProblem", "");
             misRequestForm.setValue("priorityLevel", "");
             misRequestForm.setValue("attachments", []);
             misRequestForm.setValue("problemDetails", plateJsInitialValue);
+            setIsReset(true);
             setSelectedFiles(null);
+            socket.emit("requestNotification", {
+                department: user?.department,
+                toNotifyDesignation: DESIGNATIONS.UNIT_HEAD,
+                message: `A new created request from ${response?.data.requestedBy}`,
+                title: "New MIS Tech Support Request.",
+                requestSourceId: response?.data?.requestId,
+                type: NOTIFICATION_TYPE.NEW_REQUEST
+            })
         }
     }
 
@@ -177,7 +191,18 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                             <FormLabel className="text-nowrap col-span-1">Problem Details</FormLabel>
                             <div className="w-full col-span-3 space-y-2">
                                 <FormControl className="w-full">
-                                    <PlateJSEditor className="h-[300px]" value={field.value || []} setValue={field.onChange} disabled={misRequestForm.formState.isSubmitting} />
+                                    <PlateJSEditor
+                                        className="h-[300px]"
+                                        value={field.value || []}
+                                        setValue={(val) => {
+                                            if (isReset) {
+                                                setIsReset(false);
+                                            }
+                                            field.onChange(val);
+                                        }}
+                                        disabled={misRequestForm.formState.isSubmitting}
+                                        isReset={isReset}
+                                    />
                                 </FormControl>
                                 <FormMessage className="col-span-4" />
                             </div>
@@ -201,7 +226,6 @@ const MISRequestForm = ({ serviceCategory }: TMISRequestFormProps) => {
                                                 handleFileChange(event);
                                                 if (event.target?.files) {
                                                     const files = Object.values(event.target?.files);
-                                                    console.log(files)
                                                     field.onChange(files);
                                                 }
                                             }} disabled={(misRequestForm.formState.isSubmitting)} />

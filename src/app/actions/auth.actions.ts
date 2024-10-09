@@ -6,6 +6,8 @@ import { getUserSession } from "../lib/session";
 import { lucia } from "@/lib/lucia/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getDesignationByUser } from "@/data-access/designation.data-access";
+import { TDesignation } from "@/types/designation.types";
 
 export const signInAction = async (params: TSignInParams) => {
 
@@ -21,6 +23,14 @@ export const signInAction = async (params: TSignInParams) => {
 				sessionCookie.attributes
 			);
 			const userSession = await lucia.validateSession(session.id);
+
+			if(userSession.user) {
+				const designation = await getDesignationByUser({ userId: userSession.user.id, departmentId: userSession.user.department }) as TDesignation;
+	
+				if(designation) {
+					userSession.user.designation = designation.designation as any
+				}
+			}
 			
 			return Response({
 				data: userSession

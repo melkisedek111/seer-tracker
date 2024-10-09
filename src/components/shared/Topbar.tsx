@@ -11,9 +11,10 @@ import { Input } from '../ui/input';
 import DarkModeToggle from './DarkModeToggle';
 import { logoutUserAction } from '@/app/actions/auth.actions';
 import { useUserSession } from '@/context/session.context';
+import NotificationCountDropdown from './NotificationCountDropdown';
 
 const TopBar = () => {
-    const { handleRemoveUserSession } = useUserSession();
+    const { handleRemoveUserSession, user } = useUserSession();
 
     const handleLogout = async () => {
         handleRemoveUserSession();
@@ -112,11 +113,12 @@ const TopBar = () => {
                 </form>
             </div>
             <DarkModeToggle />
+            <NotificationCountDropdown />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="icon" className="rounded-full">
-                        <CircleUser className="h-5 w-5" />
-                        <span className="sr-only">Toggle user menu</span>
+                    <Button variant="secondary" size="icon" className="capitalize flex flex-col w-auto">
+                        <span className="font-semibold">{user?.firstName}</span>
+                        <span className="text-xs">{user?.role?.join(", ")}</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

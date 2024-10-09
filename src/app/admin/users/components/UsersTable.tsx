@@ -39,6 +39,7 @@ export default function UsersTable() {
     const [selectedUser, setSelectedUser] = useState<TUser | undefined>(undefined);
     const [selectedDialog, setSelectedDialog] = useState<string>("");
     const { notify } = useNotify();
+    
     useEffect(() => {
         mutate()
     }, [urlParams]);

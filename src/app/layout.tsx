@@ -11,6 +11,7 @@ import NotificationWrapper from "@/components/shared/NotificationContainer";
 import dbConnect from "@/lib/mongodb";
 import { UserSessionProvider } from "@/context/session.context";
 import SessionWrapper from "@/components/shared/SessionWrapper";
+import { SocketProvider } from "@/context/socket.context";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -43,9 +44,11 @@ export default async function RootLayout({
             <NotificationProvider>
               <NotificationWrapper>
                 <SessionWrapper>
-                  <PageContainer>
-                    {children}
-                  </PageContainer>
+                  <SocketProvider>
+                    <PageContainer>
+                      {children}
+                    </PageContainer>
+                  </SocketProvider>
                 </SessionWrapper>
               </NotificationWrapper>
               <Toaster richColors position="bottom-right" expand={true} />
