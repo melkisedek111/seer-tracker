@@ -21,9 +21,9 @@ const DesignationCard = (props: any) => {
 
                 <div className="flex-1 space-y-3">
                     <div>
-                        <h1 className="text-xl font-bold">{props.fullName}</h1>
-                        <p className="text-muted-foreground">{props.position}</p>
-                        <p className="text-muted-foreground">Emp No. {props.employeeNumber}</p>
+                        <h1 className="text-lg font-bold">{props.fullName}</h1>
+                        <p className="text-muted-foreground text-sm">{props.position}</p>
+                        <p className="text-muted-foreground text-sm">Emp No. {props.employeeNumber}</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <SquareUser size={18} />

@@ -8,7 +8,7 @@ const MetricCards = () => {
             <Card className="p-4">
                 <div className="flex items-center justify-between">
                     <p>Total Completed Request</p>
-                    <CheckSquare />
+                    <CheckSquare size={19} />
                 </div>
                 <h1 className="text-3xl font-bold">320</h1>
                 <p className="text-sm text-muted-foreground">+20% from the last month</p>
@@ -16,7 +16,7 @@ const MetricCards = () => {
             <Card className="p-4">
                 <div className="flex items-center justify-between">
                     <p>Total Current Request</p>
-                    <Clock />
+                    <Clock size={19} />
                 </div>
                 <h1 className="text-3xl font-bold">25</h1>
                 <p className="text-sm text-muted-foreground">+20% from the last month</p>
@@ -24,7 +24,7 @@ const MetricCards = () => {
             <Card className="p-4">
                 <div className="flex items-center justify-between">
                     <p>Total High Priority</p>
-                    <Flag />
+                    <Flag size={19} />
                 </div>
                 <h1 className="text-3xl font-bold">30</h1>
                 <p className="text-sm text-muted-foreground">+10% from the last month</p>
@@ -32,7 +32,7 @@ const MetricCards = () => {
             <Card className="p-4">
                 <div className="flex items-center justify-between">
                     <p>Total Request</p>
-                    <List />
+                    <List size={19} />
                 </div>
                 <h1 className="text-3xl font-bold">300</h1>
                 <p className="text-sm text-muted-foreground">+40% from the last month</p>

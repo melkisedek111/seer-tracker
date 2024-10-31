@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { Response } from "@/app/actions/server-action.helper";
 import { getDesignationByUser } from "@/data-access/designation.data-access";
 import { TDesignation } from "@/types/designation.types";
+import { getDepartmentByParams } from "@/data-access/department.data-access";
 
 type TUserSession = {
 	user: User | null;
@@ -41,6 +42,11 @@ export const getUserSession = cache(async () => {
 
 		if(user) {
 			const designation = await getDesignationByUser({ userId: user.id, departmentId: user.department }) as TDesignation;
+			const department = await getDepartmentByParams({ _id: user?.department });
+			
+			if(department) {
+				user.departmentName = department?.name as any;
+			}
 
 			if(designation) {
 				user.designation = designation.designation as any

@@ -82,8 +82,10 @@ export const PRIORITY_LEVEL = {
 
 export const NOTIFICATION_TYPE = {
     NEW_REQUEST: "New Request",
+    REJECTED: "Request Rejected",
     REQUEST_UPDATE: "Request Update",
     NEW_MESSAGE: "New Message",
+    UNIT_APPROVED: "Request Approved By Unit Head",
     TO_APPROVED_REQUEST: "To Approved Request"
 }
 
@@ -93,4 +95,10 @@ export const REQUEST_PROCESS = {
     RECOMMENDING_APPROVAL: "Recommending Approval",
     SERVICE_APPROVAL: "Service Approval",
     ASSIGNED_APPROVAL: "Assigned Approval"
+}
+
+
+export const ACKNOWLEDGE_TYPE = {
+    REJECTED: "REJECTED",
+    APPROVED: "APPROVED"
 }

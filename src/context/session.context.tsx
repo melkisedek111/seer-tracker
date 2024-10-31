@@ -17,6 +17,7 @@ type TUserSessionContext = {
     isLoadingUser: boolean;
     isLoggedIn: boolean;
     handleRemoveUserSession: () => void;
+    designation: string | null;
 };
 
 const UserSessionContext = createContext<TUserSessionContext>(
@@ -65,6 +66,7 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
                 setSession(data.session);
                 setIsLoggedIn(true);
                 setUser(data.user);
+                setDesignation(data.user.designation)
                 setRole(data.user.role);
                 setIsLoadingUser(false);
             } else {
@@ -91,7 +93,8 @@ export const UserSessionProvider = ({ children }: TUserSessionProviderProps) => 
         handleUserSession,
         isLoadingUser,
         isLoggedIn,
-        handleRemoveUserSession
+        handleRemoveUserSession,
+        designation
     }
 
     return (

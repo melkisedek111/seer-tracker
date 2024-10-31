@@ -10,7 +10,7 @@ export const createDepartment = async (params: TCreateDepartmentParams) => {
 };
 
 export const getDepartmentByParams = async (params: {_id?: string, name?: string; initials?: string}): Promise<DepartmentType | null> => {
-	return await Department.findOne(params);
+	return await Department.findOne(params).lean();
 };
 
 export const getDepartments = async (): Promise<DepartmentType[]> => {

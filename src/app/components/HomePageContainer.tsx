@@ -1,13 +1,17 @@
-import React from 'react'
+"use client";
+import React, { useState } from 'react'
 import MetricCards from './MetricCards'
 import RequestsTable from './RequestsTable'
 import LatestRequestCard from '@/app/admin/components/LatestRequestCard'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import RequestCard from '@/components/shared/RequestCard'
-import RequestCardInsight from '@/components/shared/RequestCardInsight'
+import RequestCardInsight, { TRequestCardInsightProps } from '@/components/shared/RequestCardInsight'
+import { getRequestAction } from '../actions/request.actions';
 
 const HomePageContainer = () => {
+    const [request, setRequest] = useState<TRequestCardInsightProps>();
+
     return (
         <main className="grid grid-cols-6 gap-3">
             <div className="col-span-4 space-y-3">
@@ -19,12 +23,19 @@ const HomePageContainer = () => {
                             See more
                         </Link>
                     </div>
-                    <RequestsTable />
+                    <RequestsTable setRequestDetails={setRequest}/>
                 </div>
             </div>
             <div className="col-span-2 relative">
                 <div className=" top-0 sticky">
-                    <RequestCardInsight />
+                    {
+                        !request && <div className="w-full text-muted-foreground text-center">
+                            No Selected Request
+                        </div>
+                    }
+                    {
+                        (request && request?._id) && <RequestCardInsight {...request} />
+                    }
                 </div>
             </div>
         </main>

@@ -30,6 +30,8 @@ import {
 import DepartmentListTable from "./DepartmentListTable";
 import { useNotify } from "@/context/notification.context";
 import { TGetUsersWithDesignationByDepartmentIdReturn } from "@/types/department.types";
+import { cn } from "@/lib/utils";
+import { SERVICE_TYPES } from "@/constants/index.constants";
 
 export default function AssignDesignationDialog() {
     const { data } = useCustomSWR(ENDPOINTS.GET_ALL_DEPARTMENTS, getDepartmentsAction);
@@ -66,7 +68,10 @@ export default function AssignDesignationDialog() {
                                 <SelectLabel>Colleges</SelectLabel>
                                 {
                                     departmentList.map(department => (
-                                        <SelectItem value={department.value}>{department.label}</SelectItem>
+                                        <SelectItem value={department.value} className={cn(
+                                            SERVICE_TYPES.BAGS === department.label && "text-teal-600 hover:!text-teal-600",
+                                            SERVICE_TYPES.MIS === department.label && "text-teal-600 hover:!text-teal-600",
+                                        )}>{department.label}</SelectItem>
                                     ))
                                 }
                             </SelectGroup>

@@ -14,6 +14,7 @@ export type TUnitApproval = {
 	approvedAt: Date | null;
 	isRejected: boolean | null;
 	rejectedAt: Date | null;
+	rejectReason: string | null;
 };
 
 export type TRecommendingApproval = {
@@ -22,6 +23,7 @@ export type TRecommendingApproval = {
 	approvedAt: Date | null;
 	isRejected: boolean | null;
 	rejectedAt: Date | null;
+	rejectReason: string | null;
 };
 
 export type TServiceUnitApproval = {
@@ -31,6 +33,7 @@ export type TServiceUnitApproval = {
 	approvedAt: Date | null;
 	isRejected: boolean | null;
 	rejectedAt: Date | null;
+	rejectReason: string | null;
 };
 
 export type TConfirmation = {
@@ -38,6 +41,7 @@ export type TConfirmation = {
 	confirmedAt: Date | null;
 	isRejected: boolean | null;
 	rejectedAt: Date | null;
+	rejectReason: string | null;
 };
 
 export type TAssignedPerson = {
@@ -46,6 +50,7 @@ export type TAssignedPerson = {
 	assignedAt: Date | null;
 	isRejected: boolean | null;
 	rejectedAt: Date | null;
+	rejectReason: string | null;
 };
 
 export type RequestProcessType = Document & {
@@ -72,12 +77,14 @@ export const defaultRequestProcess = {
 		approvedAt: null,
 		rejectedAt: null,
 		isRejected: null,
+		rejectReason: null,
 	},
 	recommendingApproval: {
 		acknowledgeBy: null,
 		approvedAt: null,
 		rejectedAt: null,
 		isRejected: null,
+		rejectReason: null,
 	},
 	serviceUnitApproval: {
 		acknowledgeBy: null,
@@ -85,12 +92,14 @@ export const defaultRequestProcess = {
 		approvedAt: null,
 		rejectedAt: null,
 		isRejected: null,
+		rejectReason: null,
 	},
 	confirmation: {
 		confirmedBy: null,
 		confirmedAt: null,
 		rejectedAt: null,
 		isRejected: null,
+		rejectReason: null,
 	},
 	assignedPerson: {
 		assignedTo: null,
@@ -98,6 +107,7 @@ export const defaultRequestProcess = {
 		assignedAt: null,
 		rejectedAt: null,
 		isRejected: null,
+		rejectReason: null,
 	},
 };
 
@@ -119,6 +129,10 @@ const UnitApprovalSchema = new mongoose.Schema<TUnitApproval>(
 		isRejected: {
 			type: Boolean,
 			default: false,
+		},
+		rejectReason: {
+			type: String,
+			default: null,
 		},
 	},
 	{ _id: false }
@@ -142,6 +156,10 @@ const RecommendingApprovalSchema = new mongoose.Schema<TRecommendingApproval>(
 		isRejected: {
 			type: Boolean,
 			default: false,
+		},
+		rejectReason: {
+			type: String,
+			default: null,
 		},
 	},
 	{ _id: false }
@@ -170,6 +188,10 @@ const ServiceUnitApprovalSchema = new mongoose.Schema<TServiceUnitApproval>(
 		isRejected: {
 			type: Boolean,
 			default: false,
+		},
+		rejectReason: {
+			type: String,
+			default: null,
 		},
 	},
 	{ _id: false }
@@ -204,6 +226,10 @@ const ConfirmationSchema = new mongoose.Schema<TConfirmation>(
 			type: Boolean,
 			default: false,
 		},
+		rejectReason: {
+			type: String,
+			default: null,
+		},
 	},
 	{ _id: false }
 );
@@ -231,6 +257,10 @@ const AssignedPersonSchema = new mongoose.Schema<TAssignedPerson>(
 		isRejected: {
 			type: Boolean,
 			default: false,
+		},
+		rejectReason: {
+			type: String,
+			default: null,
 		},
 	},
 	{ _id: false }

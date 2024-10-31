@@ -23,7 +23,8 @@ export const lucia = new Lucia(adapter, {
 			isApproved: attributes.isApproved,
 			department: attributes.department,
 			position: attributes.position,
-			designation: null
+			designation: null,
+			departmentName: null
 		};
 	},
 });
@@ -80,4 +81,5 @@ interface DatabaseUserAttributes {
     role: string;
 	isActive: boolean;
 	isApproved: boolean;
+	departmentName: string | null;
 }

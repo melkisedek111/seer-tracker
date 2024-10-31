@@ -13,5 +13,6 @@ export const ENDPOINTS = {
     GET_ALL_USER_DESIGNATION: "/designations/users",
     GET_ALL_DESIGNATIONS: "/designations",
     GEL_ALL_REQUESTS: "/requests",
-    GET_NOTIFICATION_COUNTS: "/notification-counts"
+    GET_NOTIFICATION_COUNTS: "/notification-counts",
+    GET_REQUESTS_BY_DEPARTMENT: "/requests/by-department",
 }

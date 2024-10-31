@@ -10,5 +10,5 @@ export const getServiceCategories = async (): Promise<ServiceCategoryType[]> => 
 }
 
 export const getServiceCategoryByParams = async (params: Partial<TServiceCategory>): Promise<ServiceCategoryType | null> => {
-    return await ServiceCategory.findOne(params);
+    return await ServiceCategory.findOne(params).lean();
 }

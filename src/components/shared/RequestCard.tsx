@@ -8,9 +8,18 @@ import moment from "moment";
 import { getInitials } from '@/lib/string.helper'
 import PlateEditorRead from './PlateJSEditorRead'
 import { cn } from '@/lib/utils'
-import { PRIORITY_LEVEL, SERVICE_CATEGORIES } from '@/constants/index.constants'
+import { DESIGNATIONS, PRIORITY_LEVEL, SERVICE_CATEGORIES, SERVICE_TYPES } from '@/constants/index.constants'
+import AcknowledgeRequestByUnitHeadButton from './AcknowledgeRequestByUnitHeadButton'
+import { useUserSession } from '@/context/session.context'
+import ShowReasonPopover from './partials/ShowReasonPopover'
+import UnitHeadRequestStatus from './partials/UnitHeadRequestStatus'
+import AcknowledgeRequestByMISButton from './AcknowledgeRequestByMISButton'
 
 const RequestCard = (props: TGetAllRequestReturn) => {
+    const { designation, user } = useUserSession();
+    console.log(user, designation)
+    console.log(props)
+    
     return (
         <Card className="hover:bg-muted transition ease-in-out duration-300">
             <CardContent className="p-6 space-y-6">
@@ -89,24 +98,14 @@ const RequestCard = (props: TGetAllRequestReturn) => {
                                 </h5>
                                 <p className="text-sm text-muted-foreground text-wrap break-words">Filling up the request details</p>
                             </div>
-                            <div className="relative border-l-[1px] border-muted-foreground pl-7 min-h-16">
-                                <div className={cn(
-                                    "absolute -left-[18px] rounded-full p-2 flex items-center justify-center",
-                                    props.requestProcess?.unitApproval?.approvedAt ? "bg-primary" : "bg-muted-foreground"
-                                )}>
-                                    <User size={19} className="text-white" />
-                                </div>
-                                <h5 className="font-semibold flex items-center gap-2">
-                                    Unit Approval
-                                    {
-                                        (!props.requestProcess?.unitApproval?.approvedAt && props.requestProcess?.filingUp?.isCompleted) && <CircleEllipsis size={15} className="text-yellow-600" />
-                                    }
-                                    {
-                                        props.requestProcess?.unitApproval?.approvedAt && <CheckCircle size={15} className="text-green-600" />
-                                    }
-                                </h5>
-                                <p className="text-sm text-muted-foreground text-wrap break-words">Approved by: <span>{props.requestProcess.unitApproval.acknowledgeBy?.fullName || "TBD"}</span></p>
-                            </div>
+                            <UnitHeadRequestStatus
+                                approvedAt={props.requestProcess?.unitApproval?.approvedAt}
+                                isCompletedDetails={props.requestProcess?.filingUp?.isCompleted}
+                                fullName={props.requestProcess.unitApproval.acknowledgeBy?.fullName}
+                                isRejected={props.requestProcess.unitApproval.isRejected}
+                                reason={props.requestProcess.unitApproval.rejectReason}
+                                rejectedAt={props.requestProcess.unitApproval.rejectedAt}
+                            />
                             {
                                 props.serviceCategory === SERVICE_CATEGORIES.BUILDING_AND_GROUNDS_SERVICES && <div className="relative border-l-[1px] border-muted-foreground pl-7 min-h-16">
                                     <div className={cn(
@@ -118,7 +117,7 @@ const RequestCard = (props: TGetAllRequestReturn) => {
                                     <h5 className="font-semibold flex items-center gap-2">
                                         Recommending Approval
                                         {
-                                            (props.requestProcess?.unitApproval?.approvedAt && !props.requestProcess?.recommendingApproval?.approvedAt) && <CircleEllipsis size={15} className="text-yellow-600" />
+                                            ((!props.requestProcess?.recommendingApproval?.acknowledgeBy?.fullName || props.requestProcess?.serviceUnitApproval?.acknowledgeBy?.fullName) && !props.requestProcess?.recommendingApproval?.approvedAt) && <CircleEllipsis size={15} className="text-yellow-600" />
                                         }
                                         {
                                             props.requestProcess?.recommendingApproval?.approvedAt && <CheckCircle size={15} className="text-green-600" />
@@ -150,7 +149,7 @@ const RequestCard = (props: TGetAllRequestReturn) => {
                                         props.serviceCategory === SERVICE_CATEGORIES.BUILDING_AND_GROUNDS_SERVICES && "Service Approval"
                                     }
                                     {
-                                        (props.requestProcess?.recommendingApproval?.approvedAt && !props.requestProcess?.serviceUnitApproval?.approvedAt) && <CircleEllipsis size={15} className="text-yellow-600" />
+                                        ((!props.requestProcess?.recommendingApproval?.acknowledgeBy?.fullName || props.requestProcess?.serviceUnitApproval?.acknowledgeBy?.fullName) && props.requestProcess.unitApproval.acknowledgeBy?.fullName) && <CircleEllipsis size={15} className="text-yellow-600" />
                                     }
 
                                     {
@@ -169,10 +168,10 @@ const RequestCard = (props: TGetAllRequestReturn) => {
                                 <h5 className="font-semibold flex items-center gap-2">
                                     Assigned Person
                                     {
-                                        (props.requestProcess?.serviceUnitApproval?.approvedAt && !props.requestProcess?.assignedPerson?.assignedTo) && <CircleEllipsis size={15} className="text-yellow-600" />
+                                        (props.requestProcess?.serviceUnitApproval?.acknowledgeBy && !props.requestProcess?.assignedPerson?.assignedTo) && <CircleEllipsis size={15} className="text-yellow-600" />
                                     }
                                     {
-                                        props.requestProcess?.assignedPerson?.assignedTo && <CheckCircle size={15} className="text-green-600" />
+                                        props.requestProcess?.assignedPerson?.assignedTo?.fullName && <CheckCircle size={15} className="text-green-600" />
                                     }
                                 </h5>
                                 <p className="text-sm text-muted-foreground text-wrap break-words">
@@ -189,14 +188,17 @@ const RequestCard = (props: TGetAllRequestReturn) => {
                         </div>
                     </div>
                     <div className="flex justify-center items-center gap-10">
-                        <Button variant={"destructive"}>
-                            <X />
-                            Reject
-                        </Button>
-                        <Button variant={"default"}>
-                            <Check />
-                            Approve
-                        </Button>
+                        {
+                            !props.requestProcess.unitApproval?.acknowledgeBy?.fullName && designation === DESIGNATIONS.UNIT_HEAD && <AcknowledgeRequestByUnitHeadButton title={props.title} requestId={props._id} departmentId={props.departmentId} serviceCategory={props.serviceCategory} userId={props.userId} />
+                        }
+                        {
+                            (props.requestProcess.unitApproval?.approvedAt
+                                && !props.requestProcess.serviceUnitApproval?.acknowledgeBy?.fullName
+                                && props.serviceCategory === (user?.departmentName || "")
+                                && designation === DESIGNATIONS.SERVICE_APPROVER
+                            )
+                            && <AcknowledgeRequestByMISButton title={props.title} requestId={props._id} departmentId={props.departmentId} serviceCategory={props.serviceCategory} userId={props.userId} />
+                        }
                     </div>
                 </div>
             </CardContent>

@@ -8,10 +8,11 @@ import { getAllRequestsActions } from '@/app/actions/request.actions';
 import { TGetAllRequestParams, TGetAllRequestReturn } from '@/types/request.types';
 import PlateEditorRead from '../create/components/RTESerialize';
 import useQueryParams from '@/hooks/useQueryParams';
+import { Loader } from 'lucide-react';
 
 const RequestPageContainer = () => {
     const urlParams = useQueryParams();
-    const { data, mutate } = useCustomSWR(`${ENDPOINTS.GEL_ALL_REQUESTS}?${urlParams.toString()}`, getAllRequestsActions, urlParams);
+    const { data, isLoading, mutate } = useCustomSWR(`${ENDPOINTS.GEL_ALL_REQUESTS}?${urlParams.toString()}`, getAllRequestsActions, urlParams);
 
     const getColumns = (columnIndex: number) => {
         return data?.data.filter((_, index: number) => index % 3 === columnIndex);
@@ -24,7 +25,13 @@ const RequestPageContainer = () => {
     return (
         <main className="grid space-y-5">
             <RequestFilters />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 masonry">
+            {
+                isLoading && <div className="h-full w-full grid place-items-center">
+                    <Loader className="animate-spin size-5" />
+                </div>
+            }
+            <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 masonry">
+
                 {
                     [
                         getColumns(0),

@@ -1,10 +1,18 @@
 import { DepartmentType } from "@/models/department.model";
-import { RequestProcessType, TAssignedPerson, TConfirmation, TFilingUp, TRecommendingApproval, TServiceUnitApproval, TUnitApproval } from "@/models/request-process.model";
+import {
+	RequestProcessType,
+	TAssignedPerson,
+	TConfirmation,
+	TFilingUp,
+	TRecommendingApproval,
+	TServiceUnitApproval,
+	TUnitApproval,
+} from "@/models/request-process.model";
 import { ServiceCategoryType } from "@/models/service-category.model";
 import { UserType } from "@/models/user.model";
 
 export type TRequest = {
-    _id: string;
+	_id: string;
 	title: string;
 	serviceCategory: string | ServiceCategoryType;
 	requestUniqueId: string;
@@ -24,43 +32,42 @@ export type TRequest = {
 	isArchived: boolean;
 	isActive: boolean;
 	createdAt: Date;
-}
-
+};
 
 export type TCreateMISRequest = {
-    serviceCategory: string;
-    title: string;
-    problemType: string;
-    otherProblem?: string;
-    problemDetails: any[];
-    priorityLevel: string;
-}
+	serviceCategory: string;
+	title: string;
+	problemType: string;
+	otherProblem?: string;
+	problemDetails: any[];
+	priorityLevel: string;
+};
 
 export type TCreateBAGSRequest = {
-    serviceCategory: string;
-    title: string;
-    problemDetails: any[];
-    priorityLevel: string;
-    services: string[];
-    otherService?: string | null;
-}
-
+	serviceCategory: string;
+	title: string;
+	problemDetails: any[];
+	priorityLevel: string;
+	services: string[];
+	otherService?: string | null;
+};
 
 export type TCreateRequestParams = {
-    requestDetails: TCreateMISRequest | TCreateBAGSRequest,
-    files: FormData;
-}
+	requestDetails: TCreateMISRequest | TCreateBAGSRequest;
+	files: FormData;
+};
 
 export type TGetAllRequestParams = {
-    page: number;
+	page: number;
 	limit: number;
 	keywords: string;
 	serviceType: string;
-    requestProcess: string;
-    priorityLevel: string;
-    from: Date;
-    to: Date
-}
+	requestProcess: string;
+	department: string;
+	priorityLevel: string;
+	from: Date;
+	to: Date;
+};
 
 export type TRequestProcess = {
 	_id: string;
@@ -78,22 +85,49 @@ export type TRequestProcess = {
 };
 
 export type TGetAllRequestReturn = {
-    _id: string;
-    title: string;
-    userId: string;
-    problemType: string;
-    services: string[];
-    otherProblem: string | null;
-    otherService: string | null;
-    startDate: Date | null;
-    endDate: Date | null;
-    requestorName: string;
-    department: string;
-    requestUniqueId: string;
-    serviceCategory: string;
-    problemDetails: any;
-    requestProcess: TRequestProcess;
-    createdAt: Date;
-    avatar: string | null;
-    priorityLevel: string;
+	_id: string;
+	title: string;
+	userId: string;
+	problemType: string;
+	services: string[];
+	otherProblem: string | null;
+	otherService: string | null;
+	startDate: Date | null;
+	endDate: Date | null;
+	requestorName: string;
+	department: string;
+	departmentId: string;
+	requestUniqueId: string;
+	serviceCategory: string;
+	problemDetails: any;
+	requestProcess: TRequestProcess;
+	createdAt: Date;
+	avatar: string | null;
+	priorityLevel: string;
+};
+
+export type TGetRequestsByDepartmentReturn = {
+	requests: {
+		_id: string;
+		title: string;
+		userId: string;
+		requestorName: string;
+		department: string;
+		requestUniqueId: string;
+		serviceCategory: string;
+		createdAt: Date;
+		avatar: string | null;
+		priorityLevel: string;
+	}[];
+	totalRequests: number;
+};
+
+
+export type TAcknowledgeRequestParams = {
+	acknowledgeType: string;
+	requestId: string;
+	rejectReason?: string;
+	processType?: string;
+	serviceUnit?: string;
+	serviceCategory?: string;
 }

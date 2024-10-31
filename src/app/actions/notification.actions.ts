@@ -9,6 +9,7 @@ import {
 	getNotificationsUseCase,
 	seenNotificationCountUseCase,
 	sendNotificationUseCase,
+	sendRequestNotificationBackUseCase,
 } from "@/use-cases/notification.use-cases";
 
 export const sendNotificationAction = ServerAction<
@@ -17,6 +18,21 @@ export const sendNotificationAction = ServerAction<
 >(async (params) => {
 	try {
 		const notification = await sendNotificationUseCase(params);
+		return Response<{ isNotificationSent: boolean }>({
+			data: notification,
+			message: "You have new notification.",
+		});
+	} catch (error) {
+		return ParsedError(error);
+	}
+});
+
+export const sendNotificationBackAction = ServerAction<
+	{ isNotificationSent: boolean },
+	TSendNotificationParams
+>(async (params) => {
+	try {
+		const notification = await sendRequestNotificationBackUseCase(params);
 		return Response<{ isNotificationSent: boolean }>({
 			data: notification,
 			message: "You have new notification.",

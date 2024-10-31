@@ -1,3 +1,4 @@
+"use client";
 import { Card } from '@/components/ui/card'
 import React from 'react'
 import {
@@ -14,6 +15,16 @@ import { Button } from '@/components/ui/button'
 import { Eye } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import useCustomSWR from '@/hooks/useCustomSWR'
+import { ENDPOINTS } from '@/constants/endpoints.types'
+import { getRequestAction, getRequestsByDepartmentAction } from '../actions/request.actions'
+import TableRowLoader from '@/components/shared/TableRowLoader';
+import { getInitials } from '@/lib/string.helper';
+import { cn } from '@/lib/utils';
+import { PRIORITY_LEVEL } from '@/constants/index.constants';
+import moment from 'moment';
+import { useNotify } from '@/context/notification.context';
+import { TRequestCardInsightProps } from '@/components/shared/RequestCardInsight';
 const invoices = [
     {
         invoice: "INV001",
@@ -57,8 +68,25 @@ const invoices = [
         totalAmount: "$300.00",
         paymentMethod: "Credit Card",
     },
-]
-const RequestsTable = () => {
+];
+
+export type TRequestsTableProps = {
+    setRequestDetails: (params: TRequestCardInsightProps) => void;
+}
+
+const RequestsTable = ({ setRequestDetails }: TRequestsTableProps) => {
+    const { data } = useCustomSWR(ENDPOINTS.GET_REQUESTS_BY_DEPARTMENT, getRequestsByDepartmentAction);
+    const { notify } = useNotify();
+
+    const handleGetRequest = async (requestId: string) => {
+        const response = await getRequestAction({requestId});
+
+        notify(response);
+        if(response?.ok && response?.data) {
+            setRequestDetails(response?.data as TRequestCardInsightProps);
+        }
+    }
+
     return (
         <Card className="p-0 col-span-4">
             <Table>
@@ -66,156 +94,56 @@ const RequestsTable = () => {
                     <TableRow>
                         <TableHead>Requester</TableHead>
                         <TableHead>Request Title</TableHead>
-                        <TableHead>Department</TableHead>
+                        <TableHead>Service</TableHead>
                         <TableHead>Priority</TableHead>
                         <TableHead>Requested At</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src="https://api.dicebear.com/9.x/open-peeps/svg?seed=Nico" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            Nico David
-                        </TableCell>
-                        <TableCell className="text-orange-600">No Network connection on my pc</TableCell>
-                        <TableCell>DICT</TableCell>
-                        <TableCell>
-                            <Badge className="text-sm" variant={"secondary"}>
-                                Low
-                            </Badge>
-                        </TableCell>
-                        <TableCell>7 Minutes ago</TableCell>
-                        <TableCell>
-                            <Button variant={"secondary_a"} size="xs" className="flex items-center gap-1">
-                                <Eye size={12} />
-                                View
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src="https://api.dicebear.com/9.x/open-peeps/svg?seed=Edward" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            Edward Garcia
-                        </TableCell>
-                        <TableCell className="text-orange-600">No display on my screen</TableCell>
-                        <TableCell>CAS</TableCell>
-                        <TableCell>
-                            <Badge className="text-sm" variant={"default"}>
-                                Medium
-                            </Badge>
-                        </TableCell>
-                        <TableCell>21 Minutes ago</TableCell>
-                        <TableCell>
-                            <Button variant={"secondary_a"} size="xs" className="flex items-center gap-1">
-                                <Eye size={12} />
-                                View
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src="https://api.dicebear.com/9.x/open-peeps/svg?seed=sandro" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            Sandro Dela Cruz
-                        </TableCell>
-                        <TableCell className="text-orange-600">Printer does not work</TableCell>
-                        <TableCell>CAS</TableCell>
-                        <TableCell>
-                            <Badge className="text-sm" variant={"destructive"}>
-                                High
-                            </Badge>
-                        </TableCell>
-                        <TableCell>21 Minutes ago</TableCell>
-                        <TableCell>
-                            <Button variant={"secondary_a"} size="xs" className="flex items-center gap-1">
-                                <Eye size={12} />
-                                View
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src="https://api.dicebear.com/9.x/open-peeps/svg?seed=sandro" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            Sandro Dela Cruz
-                        </TableCell>
-                        <TableCell className="text-orange-600">Printer does not work</TableCell>
-                        <TableCell>CAS</TableCell>
-                        <TableCell>
-                            <Badge className="text-sm" variant={"destructive"}>
-                                High
-                            </Badge>
-                        </TableCell>
-                        <TableCell>21 Minutes ago</TableCell>
-                        <TableCell>
-                            <Button variant={"secondary_a"} size="xs" className="flex items-center gap-1">
-                                <Eye size={12} />
-                                View
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src="https://api.dicebear.com/9.x/open-peeps/svg?seed=sandro" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            Sandro Dela Cruz
-                        </TableCell>
-                        <TableCell className="text-orange-600">Printer does not work</TableCell>
-                        <TableCell>CAS</TableCell>
-                        <TableCell>
-                            <Badge className="text-sm" variant={"destructive"}>
-                                High
-                            </Badge>
-                        </TableCell>
-                        <TableCell>21 Minutes ago</TableCell>
-                        <TableCell>
-                            <Button variant={"secondary_a"} size="xs" className="flex items-center gap-1">
-                                <Eye size={12} />
-                                View
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src="https://api.dicebear.com/9.x/open-peeps/svg?seed=sandro" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            Sandro Dela Cruz
-                        </TableCell>
-                        <TableCell className="text-orange-600">Printer does not work</TableCell>
-                        <TableCell>CAS</TableCell>
-                        <TableCell>
-                            <Badge className="text-sm" variant={"destructive"}>
-                                High
-                            </Badge>
-                        </TableCell>
-                        <TableCell>21 Minutes ago</TableCell>
-                        <TableCell>
-                            <Button variant={"secondary_a"} size="xs" className="flex items-center gap-1">
-                                <Eye size={12} />
-                                View
-                            </Button>
-                        </TableCell>
-                    </TableRow>
+                    <TableRowLoader colSpan={6}>
+                        {
+                            data?.data?.requests.map(request => (
+                                <TableRow key={request._id} className="cursor-pointer" onClick={() => handleGetRequest(request._id)}>
+                                    <TableCell className="flex items-center gap-3">
+                                        <Avatar>
+                                            <AvatarImage src={request.avatar || ""} />
+                                            <AvatarFallback>{getInitials(request.requestorName)}</AvatarFallback>
+                                        </Avatar>
+                                        {request.requestorName}
+                                    </TableCell>
+                                    <TableCell className="text-orange-600">{request.title}</TableCell>
+                                    <TableCell>{request.serviceCategory}</TableCell>
+                                    <TableCell>
+                                        <Badge className={cn(
+                                            "text-sm capitalize",
+                                            request.priorityLevel === PRIORITY_LEVEL.HIGH && "bg-red-600 hover:bg-red-600/90",
+                                            request.priorityLevel === PRIORITY_LEVEL.NORMAL && "bg-blue-600 hover:bg-blue-600/90",
+                                            request.priorityLevel === PRIORITY_LEVEL.LOW && "bg-gray-600 hover:bg-gray-600/90",
+                                        )}>
+                                            {request.priorityLevel}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        {moment(request.createdAt).fromNow()}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button variant={"secondary_a"} size="xs" className="flex items-center gap-1" onClick={(e) => {
+                                            e.stopPropagation();
+                                        }}>
+                                            <Eye size={12} />
+                                            View
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        }
+                    </TableRowLoader>
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell colSpan={5}>Total</TableCell>
-                        <TableCell className="text-right">$2,500.00</TableCell>
+                        <TableCell colSpan={5}>Total Requests</TableCell>
+                        <TableCell className="text-right font-semibold">{data?.data?.totalRequests}</TableCell>
                     </TableRow>
                 </TableFooter>
             </Table>

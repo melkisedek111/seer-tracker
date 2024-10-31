@@ -92,6 +92,9 @@ const Sidebar = ({ children }: TSidebarProps) => {
                                     </Link>
                                 ))
                             }
+                            <Link href="#">
+                                Employees
+                            </Link>
                         </nav>
                     </div>
                     <div className="mt-auto p-4">

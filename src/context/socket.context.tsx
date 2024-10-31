@@ -36,15 +36,14 @@ export const SocketProvider = ({ children }: TSocketProviderProps) => {
 
     useEffect(() => {
         socket.on("receiveNotification", (message) => {
-            if (message?.ok
-                && user?.department?.toString() === message?.data?.department.toString()
-                && user?.designation === message?.data?.toNotifyDesignation
-                && message?.data?.userToBeNotify.includes(user?.id)) {
+            const toNotifyDepartment = (user?.department?.toString() === message?.data?.department?.toString() || user?.departmentName === message?.data?.department) && user?.designation === message?.data?.toNotifyDesignation && message?.data?.userToBeNotify?.includes(user?.id);
+            const toNotifyBack = user?.id === message.data.toNotifyRequestorId;
+            if (message?.ok && (toNotifyDepartment || toNotifyBack)) {
                 mutate(ENDPOINTS.GET_NOTIFICATION_COUNTS);
                 notify(message);
             }
         });
-    }, [])
+    }, [user])
 
     useEffect(() => {
         if (socket.connected) {
